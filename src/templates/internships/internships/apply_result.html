@@ -1,0 +1,17 @@
+{% extends 'internships/base.html' %}
+
+{% load i18n %}
+
+
+{% block title %}HEIs Employers / Apply Info{% endblock %}
+
+{% block content %}
+<section class="big-wrap">
+    <div class="container">
+        <h2>{% if apply_success %}{% trans "The Application has been successfully sent!" %}{% else %}{% trans "The Application cannot be sent..." %}{% endif %}
+        </h2>
+        <br><br><br>
+        <a href="{% url 'home' %}" class="btn btn-success small-btn">{% trans "Let's Go Home" %}</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'internships/emails/base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<p>{% trans "Hello! A student has registered on the " %} <a href="https://work4practice.com">{% trans "portal" %}</a></p>
+<div class="header-details">
+    <h4>{{ student.full_name }} {% if student.birthdate %}({{ student.birthdate }}){% endif %}</h4>                                
+    <p>{% if student.gender %}{{ student.get_gender_display }}{% endif %}{% if student.birthdate %}, {{ student.age }}{% endif %}</p>
+    <p>{% if student.user.name %}{% trans "Email" %}: {{ student.user.name }}{% endif %}</p>
+    <p>{% if student.card_number %}{% trans "Student card number" %}: {{ student.card_number }}{% endif %}</p>
+</div>
+<p>{% trans "You can confirm the student by the " %}<a href="https://work4practice.com/university/students">{% trans "link" %}</a>.</p>
+{% endblock %}

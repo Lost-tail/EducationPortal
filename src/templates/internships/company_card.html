@@ -1,0 +1,21 @@
+{% load static %}
+{% load i18n %}
+<a href="{{ company.get_detail_url }}"><div class="organization-card">
+    <div class="organization-card__logo-wrapper">
+        <img class="organization-card__logo" src="{% if company.logo %}{{ company.logo.url }}{% else %}{% static 'img/company.png' %}{% endif %}">
+    </div>
+    <div class="organization-card__info">
+        <h3 class="organization-card__title">
+            {{ company.name }}
+        </h3>
+        <div class="organization-card__items">
+            <span class="organization-card__item">
+                {{ company.country.name }}
+            </span>
+            <span class="organization-card__item">|</span>
+            <span class="organization-card__item">
+                {% trans "Active internships" %}: {{ company.get_active_internships.count }}
+            </span>
+        </div>
+    </div>
+</div></a>

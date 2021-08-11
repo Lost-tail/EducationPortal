@@ -1,0 +1,89 @@
+{% extends 'admins/base.html' %}
+
+{% load static %}
+{% load url_replace %}
+{% load mathfilters %}
+
+{% block title %}HEIs – Employers / Administrator's page / Internships List{% endblock %}
+
+{% block page-title %}Internships{% endblock %}
+
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <h4 class="text-{{ message.tags }}">{{ message }}</h4>
+    {% endfor %}
+{% endif %}
+<div class="panel panel-darkblue">
+    <div class="panel-heading clearfix">
+        <h4 class="panel-title">Add New internship</h4>
+    </div>
+    <div class="panel-body basic-form-panel">
+        <form action="{% url 'internship_create' %}">
+            <div class="form-group">
+                <label for="exampleInputField1">Internship name</label>
+                <input type="text" class="form-control" id="exampleInputField1" name="name" placeholder="Internship Name" required>
+            </div>            
+            <button type="submit" class="btn btn-success horizontal-form-button">Create Internship</button>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-darkblue">
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Internships</th>
+                    <th>Status</th>
+                    <th>Process</th>
+                    <th>Interns</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for internship in pagination_internships %}
+                    <tr>
+                        <th scope="row">{{ internship.id }}</th>
+                        <td>{{ internship.name }}</td>
+                        <td>{{ internship.status }}</td>
+                        <th><a href="{{ internship.get_admin_applications_url }}">Applications</a></th>
+                        <th><a href="{{ internship.get_admin_interns_url }}">Inters</a></th>
+                        <td><a href="{{ internship.get_edit_url }}">Edit</a></td>
+                        <td><a href="{{ internship.get_admin_delete_url }}">Delete</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if pagination_internships.paginator.num_pages > 1 %}
+            <ul class="pagination">
+                {% if pagination_internships.has_previous %}
+                    <li><a href="?{% url_replace page=pagination_internships.previous_page_number %}" class="previous">Previous</a></li>
+                    {% if pagination_internships.previous_page_number != 1 %}
+                        <li><a href="?{% url_replace page=1 %}">1</a></li>
+                    {% endif %}
+                    {% if pagination_internships.previous_page_number|sub:1 > 1 %}
+                        <li><a href="#" class="disabled"><i class="fa fa-ellipsis-h"></i></a></li>
+                    {% endif %}
+                    <li><a href="?{% url_replace page=pagination_internships.previous_page_number %}">{{ pagination_internships.previous_page_number }}</a></li>
+                {% endif %}
+                <li class="active">
+                    <a href="?{% url_replace page=pagination_internships.number %}">{{ pagination_internships.number}}</a>
+                </li>
+                {% if pagination_internships.has_next %}
+                    <li><a href="?{% url_replace page=pagination_internships.next_page_number %}">{{ pagination_internships.next_page_number }}</a></li>
+                    {% if pagination_internships.paginator.num_pages|sub:pagination_internships.next_page_number > 1 %}
+                        <li><a href="#" class="disabled"><i class="fa fa-ellipsis-h"></i></a></li>
+                    {% endif %}
+                    {% if pagination_internships.next_page_number != pagination_internships.paginator.num_pages %}
+                        <li><a href="?{% url_replace page=pagination_internships.paginator.num_pages %}">{{ pagination_internships.paginator.num_pages }}</a></li>
+                    {% endif %}
+                    <li><a href="?{% url_replace page=pagination_internships.next_page_number %}" class="next">Next</a></li>
+                {% endif %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

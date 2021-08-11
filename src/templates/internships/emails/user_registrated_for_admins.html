@@ -1,0 +1,17 @@
+{% extends 'internships/emails/base.html' %}
+
+
+{% load i18n %}
+
+
+{% block content %}
+    <h3>{% trans 'New Registration' %} {% if confirmation_user.user_type == 'student' %}Student{% elif confirmation_user.user_type == 'university' %}University{% elif confirmation_user.user_type == 'company' %}Company{% endif %}</h3>
+    {% if confirmation_user.user_type == 'student' %}
+        <p>{% trans 'Student Full Name' %}: {{ confirmation_user.name }}</p>
+    {% elif confirmation_user.user_type == 'university' %}
+        <p>{% trans 'University Name' %}: {{ confirmation_user.name }}</p>
+    {% elif confirmation_user.user_type == 'company' %}
+        <p>{% trans 'Company Name' %}: {{ confirmation_user.name }}</p>
+    {% endif %}
+        <p>{% trans "Email" %}: {{ confirmation_user.user.email }}</p>
+{% endblock %}

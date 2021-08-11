@@ -1,0 +1,17 @@
+label{
+    font-size: 18px;
+}
+ul.pagination{
+
+}
+ul.pagination li a{
+    color: #fff;
+    background-color: #2c384e;
+    border: 1px solid #3b4558;
+}
+ul.pagination li.active a{
+    background-color: #2ec5d3;
+}
+ul.pagination a.disabled i{
+    color: #fff;
+}

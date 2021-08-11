@@ -1,0 +1,93 @@
+{% extends 'internships/base.html' %}
+
+{% load i18n %}
+{% load mathfilters %}
+{% load line_break %}
+{% load float_to_string %}
+{% load static %}
+
+{% block title %}HEIs Employers / Internship Application Details{% endblock %}
+
+
+{% block content %}
+{% include 'internships/organization_personal_account_header.html' %}
+
+<section class="full-detail-description full-detail application-detail">
+    <div class="text-center">
+        <h3 class="title">{% trans "Application for the internship" %} <a href="{{ internship_application.internship.get_detail_url }}">"{{ internship_application.internship.name }}"</a></h3>
+    </div>
+    {% if messages %}
+        <div class="text-center messages">
+            {% for message in messages %}
+                <h3 class="text-{{ message.tags }}">{{ message }}</h3>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="container">
+        <div class="col-md-12">
+        <div class="col-md-5">
+            <div class="student-info">
+                <div class="col-md-6">
+                    <div class="img-wrapper">
+                        <a href="{{ internship_application.student.get_detail_url }}"><img src="{% if internship_application.student.photo %}{{ internship_application.student.photo.url }}{% else %}{% static 'img/user.png' %}{% endif %}"></a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="student-main-info">
+                        <a href="{{ internship_application.student.get_detail_url }}">{{ internship_application.student.full_name }}</a>
+                        <br><br>
+                        {% if internship_application.student.birthdate %}
+                            {% trans "Age" %}: {{ internship_application.student.age }}<br>
+                        {% endif %}
+                        {% if internship_application.student.gender %}
+                            {% trans "Gender" %}: {{ internship_application.student.get_gender_display }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="student-block-info">
+                        {% trans "Posted" %}: {{ internship_application.created|date }}
+                        <br>
+                        {% trans "Status" %}: {{ internship_application.get_status_display }}
+                        <br>
+                        {% trans "Email" %}: <a href="mailto:{{ internship_application.student.user.email }}">{{ internship_application.student.user.email }}</a>
+                        <br>
+                        {% trans "Rating" %}: {% float_to_string internship_application.university_assessment %} / 10
+                        {% if user.university or user.staff_user.staff_type == 'University Representative' %}
+                            <button class="btn btn-default btn-edit-rating">{% trans "Edit" %}</button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if user.university or user.staff_user.staff_type == 'University Representative' %}
+                    {% if internship_application.status == 'CONSIDERED' %}
+                        <div class="col-md-12">
+                            <div class="block-approve">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="col-md-6" style="padding-right: 15px">
+                                        <button type="submit" formaction="{{ internship_application.get_approve_url }}" class="btn btn-success">{% trans "Approve" %}</button>
+                                    </div>
+                                    <div class="col-md-6" style="padding-left: 15px">
+                                        <button type="submit" formaction="{{ internship_application.get_reject_url }}" class="btn btn-default">{% trans "Reject" %}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="cover-letter">
+                <h2 class="detail-title" style="margin: 0;">{% trans "Cover Letter" %}</h2>
+                <div class="content">
+                    {% autoescape off %}
+                        {% line_break internship_application.cover_letter %}
+                    {% endautoescape %}
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

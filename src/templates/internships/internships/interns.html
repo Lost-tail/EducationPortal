@@ -1,0 +1,154 @@
+{% extends 'internships/base.html' %}
+
+{% load i18n %}
+{% load mathfilters %}
+{% load static %}
+{% load url_replace %}
+{% load float_to_string %}
+{% load line_break %}
+
+{% block title %}HEIs Employers / Interns{% endblock %}
+
+
+{% block content %}
+<section class="inner-header-title">
+    <div class="container">
+        <h1>{% trans "Personal Account" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+
+<section class="detail-desc detail-organization-account">
+    <div class="container">
+        <div class="ur-detail-wrap top-lay">
+            <div class="ur-detail-box">
+                <div class="ur-caption">
+                    <div class="navigation-account">
+                        {% if user.university %}
+                            <h5 class="ur-title navigation-account-item item" style="display: inline-block;"><a href="{% url 'organization_personal_account' %}">{{ user.university.name }}</a></h5>
+                        {% elif user.staff_user.staff_type == 'University Representative' %}
+                            <h4 class="ur-title navigation-account-item item"><a href="{% url 'organization_personal_account' %}">{{ user.staff_user.university.name }}</a></h4>
+                        {% elif user.company %}
+                            <h4 class="ur-title navigation-account-item item"><a href="{% url 'organization_personal_account' %}">{{ user.company.name }}</a></h4>
+                        {% elif user.staff_user.staff_type == 'Company Representative' %}
+                            <h4 class="ur-title navigation-account-item item"><a href="{% url 'organization_personal_account' %}">{{ user.staff_user.company.name }}</a></h4>
+                        {% endif %}
+                        <div class="navigation-account-item partition">/</div><h5 class="ur-title navigation-account-item item"><a href="{{ internship.get_interns_url }}?{% url_replace %}">{% trans "Interns" %} "{{ internship.name }}"</a></h5>
+                    </div>
+                </div>
+                <!-- {% if user.staff_user %}
+                    <div class="profile-user-box">
+                        <div class="profile-user-info">
+                            <div class="profile-user-img">
+                                <img src="{% static 'img/profile-user.png' %}">
+                            </div>
+                            <div class="profile-user-name">
+                                {{ user.staff_user.full_name }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %} -->
+            </div>
+            <div class="ur-detail-btn btn-box">
+                {% if user.university %}
+                    <a class="btn btn-success" href="{% url 'internship_create' %}">{% trans "New Internship" %}</a>
+                    <a class="btn btn-success" href="{% url 'add_university_representative' %}">{% trans "Add Representative" %}</a>
+                    <a class="btn btn-success" href="{% url 'university_edit' %}">{% trans "Edit Profile" %}</a>
+                {% elif user.staff_user.staff_type == 'University Representative' %}
+                    <a class="btn btn-success" href="{% url 'internship_create' %}">{% trans "New Internship" %}</a>
+                    <a class="btn btn-success" href="{% url 'add_university_representative' %}">{% trans "Add Representative" %}</a>
+                    <a class="btn btn-success" href="{% url 'university_edit' %}">{% trans "Edit Profile" %}</a>
+                {% elif user.company %}
+                    <a class="btn btn-success" href="{% url 'company_edit' %}">{% trans "Edit Profile" %}</a>
+                {% elif user.staff_user.staff_type == 'Company Representative' %}
+                    <a class="btn btn-success" href="{% url 'company_edit' %}">{% trans "Edit Profile" %}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="full-detail-description full-detail">
+
+    <div class="container">
+        <!--  Internship Description -->
+        <div class="row">
+            <h3 class="text-center" style="margin-bottom: 50px;">{% trans 'Interns' %} <a href="{{ internship.get_detail_url }}">"{{ internship.name }}"</a></h3>
+        </div>
+        {% if messages %}
+            <div class="text-center messages">
+                {% for message in messages %}
+                    <h3 class="text-{{ message.tags }}">{{ message }}</h3>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% for intern in pagination_interns %}
+            {% cycle 'start' 1 2 'end' as position_row silent %}
+            {% if position_row == 'start' %}
+                <div class="row extra-mrg">
+            {% endif %}
+                    <div class="col-md-3 col-sm-3">
+                        <div class="item-card application-card">
+                            <div class="img-wrapper text-center">
+                                <button type="button" data-toggle="modal" data-target="#intern_{{ intern.id }}"><img src="{% if intern.student.photo %}{{ intern.student.photo.url }}{% else %}{% static 'img/profile-user.png' %}{% endif %}"></button>
+                            </div>
+                            <br>
+                            <div class="item row-items"><span>{% trans "Full Name" %}:</span><span>{{ intern.student.full_name }}</span></div>
+                            <div class="item row-items"><span>{% trans "Approved" %}:</span><span>{{ intern.created|date }}</span></div>
+                            <button type="button" data-toggle="modal" data-target="#intern_{{ intern.id }}" class="btn btn-default btn-detail">{% trans "Details" %}</button>
+                        </div>
+                        <div class="modal fade" id="intern_{{ intern.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered custom-modal" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalCenterTitle">{% trans "Intern" %}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {% with internship_application=intern.application %}
+                                            {% include 'internships/internships/application_block.html' %}
+                                        {% endwith %}
+                                        {% if intern.internship.status == 'CLOSE' %}
+                                            {% include 'internships/internships/review_block.html' %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            {% if position_row == 'end' or forloop.last %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% if pagination_interns.paginator.num_pages > 1 %}
+            <div class="row">
+                <ul class="pagination">
+                    {% if pagination_interns.has_previous %}
+                        <li><a href="?{% url_replace page=pagination_interns.previous_page_number %}" class="previous"><i class="ti-arrow-left"></i></a></li>
+                        {% if pagination_interns.previous_page_number != 1 %}
+                            <li><a href="?{% url_replace page=1 %}">1</a></li>
+                        {% endif %}
+                        {% if pagination_interns.previous_page_number|sub:1 > 1 %}
+                            <li><a href="#" class="disabled"><i class="fa fa-ellipsis-h"></i></a></li>
+                        {% endif %}
+                        <li><a href="?{% url_replace page=pagination_interns.previous_page_number %}">{{ pagination_interns.previous_page_number }}</a></li>
+                    {% endif %}
+                    <li class="active">
+                        <a href="?{% url_replace page=pagination_interns.number %}">{{ pagination_interns.number}}</a>
+                    </li>
+                    {% if pagination_interns.has_next %}
+                        <li><a href="?{% url_replace page=pagination_interns.next_page_number %}">{{ pagination_interns.next_page_number }}</a></li>
+                        {% if pagination_interns.paginator.num_pages|sub:pagination_interns.next_page_number > 1 %}
+                            <li><a href="#" class="disabled"><i class="fa fa-ellipsis-h"></i></a></li>
+                        {% endif %}
+                        {% if pagination_interns.next_page_number != pagination_interns.paginator.num_pages %}
+                            <li><a href="?{% url_replace page=pagination_interns.paginator.num_pages %}">{{ pagination_interns.paginator.num_pages }}</a></li>
+                        {% endif %}
+                        <li><a href="?{% url_replace page=pagination_interns.next_page_number %}" class="next"><i class="ti-arrow-right"></i></a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

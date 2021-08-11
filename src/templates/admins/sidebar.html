@@ -1,0 +1,59 @@
+<div class="page-sidebar">
+    <a class="logo-box" href="{% url 'internships_list' %}">
+        <span>HEIs&nbsp;Employers</span>
+        <i class="icon-close" id="sidebar-toggle-button-close"></i>
+    </a>
+    <div class="page-sidebar-inner">
+        <div class="page-sidebar-menu">
+            <ul class="accordion-menu">
+                <li>
+                    <a href="{% url 'internships_list' %}">
+                        <i class="menu-icon fa fa-university"></i><span>Internships</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'universities_list' %}">
+                        <i class="menu-icon fa fa-flask"></i><span>Universities</span>
+                    </a>
+                </li>                            
+                <li>
+                    <a href="{% url 'companies_list' %}">
+                        <i class="menu-icon fa fa-briefcase"></i><span>Companies</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'students_list' %}">
+                        <i class="menu-icon fa fa-users"></i><span>Students</span>
+                    </a>
+                </li>  
+                <li>
+                    <a href="{% url 'staff_users_list' %}">
+                        <i class="menu-icon fa fa-address-book"></i><span>Staff Users</span>
+                    </a>
+                </li>                          
+                <li>
+                    <a href="{% url 'countries_list' %}">
+                        <i class="menu-icon fa fa-globe"></i><span>Countries</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'languages_list' %}">
+                        <i class="menu-icon fa fa-language"></i><span>Languages</span>
+                    </a>
+                </li>                                           
+                <li>
+                    <a href="{% url 'logout' %}">
+                        <i class="menu-icon fa fa-sign-out"></i><span>Log Out</span>
+                    </a>
+                </li>                            
+                <li class="menu-divider"></li>
+                <li>
+                    <a href="https://work4practice.com">
+                        <i class="menu-icon fa fa-chrome"></i><span>HEIs Employers</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- /Page Sidebar -->

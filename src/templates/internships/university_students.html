@@ -1,0 +1,189 @@
+{% extends 'internships/base.html' %}
+
+{% load i18n %}
+{% load mathfilters %}
+{% load static %}
+{% load url_replace %}
+
+{% block title %}HEIs Employers / Account{% endblock %}
+
+
+{% block content %}
+<section class="inner-header-title">
+    <div class="container">
+        <h1>{% trans "Personal Account" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+
+<section class="detail-desc detail-organization-account">
+    <div class="container">
+        <div class="ur-detail-wrap top-lay">
+            <div class="ur-detail-box">
+                <div class="ur-caption">
+                    <div class="navigation-account">
+                        {% if user.university %}
+                            <h6 class="ur-title navigation-account-item item" style="display: inline-block;"><a href="{% url 'organization_personal_account' %}">{{ user.university.name }}</a></h6>
+                        {% elif user.staff_user.staff_type == 'University Representative' %}
+                            <h6 class="ur-title navigation-account-item item"><a href="{% url 'organization_personal_account' %}">{{ user.staff_user.university.name }}</a></h6>
+                        {% elif user.company %}
+                            <h6 class="ur-title navigation-account-item item"><a href="{% url 'organization_personal_account' %}">{{ user.company.name }}</a></h6>
+                        {% elif user.staff_user.staff_type == 'Company Representative' %}
+                            <h6 class="ur-title navigation-account-item item"><a href="{% url 'organization_personal_account' %}">{{ user.staff_user.company.name }}</a></h6>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- {% if user.staff_user %}
+                    <div class="profile-user-box">
+                        <div class="profile-user-info">
+                            <div class="profile-user-img">
+                                <img src="{% static 'img/profile-user.png' %}">
+                            </div>
+                            <div class="profile-user-name">
+                                {{ user.staff_user.full_name }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %} -->
+            </div>
+            <div class="ur-detail-btn btn-box">
+                {% if user.university %}
+                    <a class="btn btn-success" href="{% url 'internship_create' %}">{% trans "New Internship" %}</a>
+                    <a class="btn btn-success" href="{% url 'add_university_representative' %}">{% trans "Add Representative" %}</a>
+                    <a class="btn btn-success" href="{% url 'university_edit' %}">{% trans "Edit Profile" %}</a>
+                    <a class="btn btn-success" href="{% url 'university_students' %}">{% trans "Students" %}</a>
+                {% elif user.staff_user.staff_type == 'University Representative' %}
+                    <a class="btn btn-success" href="{% url 'internship_create' %}">{% trans "New Internship" %}</a>
+                    <a class="btn btn-success" href="{% url 'add_university_representative' %}">{% trans "Add Representative" %}</a>
+                    <a class="btn btn-success" href="{% url 'university_edit' %}">{% trans "Edit Profile" %}</a>
+                {% elif user.company %}
+                    <a class="btn btn-success" href="{% url 'company_edit' %}">{% trans "Edit Profile" %}</a>
+                {% elif user.staff_user.staff_type == 'Company Representative' %}
+                    <a class="btn btn-success" href="{% url 'company_edit' %}">{% trans "Edit Profile" %}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="full-detail-description full-detail">
+    <div class="container">
+        <div class="full-detail-organization-account">
+            <div class="row">
+                <h3 class="text-center" style="margin-bottom: 60px;">{% trans "Students" %}</h3>
+            </div>
+            {% for student in pagination_students %}
+                {% cycle 'start' '1' 'end' as position_row silent %}
+                {% if position_row == 'start' %}
+                    <div class="row extra-mrg">
+                {% endif %}
+                <div class="col-md-6 col-sm-6">
+                    <div class="item-card internship-card-account">
+                        <div class="col-sm-10" style="padding: 0">
+                            <a href="{{ student.get_detail_url }}"><h3>{{ student.full_name }}</h3></a>
+                        </div>
+                        <div class="col-sm-12" style="padding: 0">
+                            <div class="item">
+                                <span>
+                                    {% trans "Birthdate" %}: {{ student.birthdate }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12" style="padding: 0">
+                            <div class="item">
+                                <span>
+                                    {% trans "Student card number" %}: {{ student.card_number }}
+                                </span>
+                            </div>
+                        </div>
+                        {% if not student.confirmed %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="col-sm-12" style="padding: 0">
+                                <div class="form-group">
+                                    <button class="btn-success" type="submit">{% trans 'Confirm' %}</button>
+                                </div>
+                                <input hidden type="text" id="confirm" value="{{ student.id }}" name="confirm">
+                            </div>
+                        </form>
+                        {% else %}
+                            <button type="button" class="btn-secondary" id="rate{{ student.id }}" onclick="toggle_visibility('rate{{ student.id }}', 'rating{{ student.id }}');">{% trans 'Rate' %}</button>
+                            <div class="row" id='rating{{ student.id }}' style="display:none;">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="col-sm-6">
+                                        <label>{% trans 'Academic merit' %}</label>
+                                        <input type="number" class="form-control" placeholder="{{ student.academic_merit }}" name="academic_merit" required value="{{ student.academic_merit }}" min="0" max="100">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label>{% trans 'Research experience' %}</label>
+                                        <input type="number" class="form-control" placeholder="{{ student.research_experience }}" name="research_experience" required value="{{ student.research_experience }}" min="0" max="100">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label>{% trans 'Motivation' %}</label>
+                                        <input type="number" class="form-control" placeholder="{{ student.motivation }}" name="motivation" required value="{{ student.motivation }}" min="0" max="100">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label>{% trans 'Language skill' %}</label>
+                                        <input type="number" class="form-control" placeholder="{{ student.language_skill }}" name="language_skill" required value="{{ student.language_skill }}" min="0" max="100">
+                                    </div>
+                                    <input hidden type="text" id="confirm" value="{{ student.id }}" name="user_id">
+                                    <div class="form-group">
+                                        <button class="btn-success" type="submit">{% trans 'Rate' %}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if position_row == 'end' or forloop.last %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% if pagination_students.paginator.num_pages > 1 %}
+            <div class="row">
+                <ul class="pagination">
+                    {% if pagination_students.has_previous %}
+                        <li><a href="?{% url_replace page=pagination_students.previous_page_number %}" class="previous"><i class="ti-arrow-left"></i></a></li>
+                        {% if pagination_students.previous_page_number != 1 %}
+                            <li><a href="?{% url_replace page=1 %}">1</a></li>
+                        {% endif %}
+                        {% if pagination_students.previous_page_number|sub:1 > 1 %}
+                            <li><a href="#" class="disabled"><i class="fa fa-ellipsis-h"></i></a></li>
+                        {% endif %}
+                        <li><a href="?{% url_replace page=pagination_students.previous_page_number %}">{{ pagination_students.previous_page_number }}</a></li>
+                    {% endif %}
+                    <li class="active">
+                        <a href="?{% url_replace page=pagination_students.number %}">{{ pagination_students.number}}</a>
+                    </li>
+                    {% if pagination_students.has_next %}
+                        <li><a href="?{% url_replace page=pagination_students.next_page_number %}">{{ pagination_students.next_page_number }}</a></li>
+                        {% if pagination_students.paginator.num_pages|sub:pagination_students.next_page_number > 1 %}
+                            <li><a href="#" class="disabled"><i class="fa fa-ellipsis-h"></i></a></li>
+                        {% endif %}
+                        {% if pagination_students.next_page_number != pagination_students.paginator.num_pages %}
+                            <li><a href="?{% url_replace page=pagination_students.paginator.num_pages %}">{{ pagination_students.paginator.num_pages }}</a></li>
+                        {% endif %}
+                        <li><a href="?{% url_replace page=pagination_students.next_page_number %}" class="next"><i class="ti-arrow-right"></i></a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</section>
+<script type="text/javascript">
+     function toggle_visibility(id1, id2) {
+        let e1 = document.getElementById(id1);
+        let e2 = document.getElementById(id2);
+        e1.style.display = 'none';
+        e2.style.display = 'block';
+   }
+    let rating = document.getElementById("rate")
+    let content = document.getElementById("rating")
+    rating.addEventListener("click", () => {
+    content.style.display = "block";
+    rating.style.display = "none";
+    })
+</script>
+{% endblock %}

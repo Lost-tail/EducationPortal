@@ -1,0 +1,16 @@
+{% extends 'admins/base.html' %}
+
+{% load static %}
+
+
+{% block title %}HEIs – Employers / Administrator's page / Create Internship{% endblock %}
+
+{% block page-title %}Create Internship{% endblock %}
+
+{% block content %}
+<div class="panel panel-darkblue">
+    <div class="panel-body basic-form-panel">
+        {% include 'admins/internship_form.html' %}
+    </div>
+</div>
+{% endblock %}

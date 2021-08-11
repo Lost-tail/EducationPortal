@@ -1,0 +1,92 @@
+{% load static %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Basic Page Needs
+    ================================================== -->
+    <title>{% block title %}Innovative Multi-Functional Platform «HEIs Employers»{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+    <meta http-equiv="pragma" content="no-cache" /> 
+
+<!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="{% static 'plugins/css/plugins.css' %}">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <style type="text/css">
+    .lang-menu .en:before{
+        background-image: url({% static 'img/languages/en.png' %});
+    }
+    .lang-menu .ru:before{
+        background-image: url({% static 'img/languages/ru.png' %});
+    }
+    .lang-menu .selected-lang:before{
+        background-image: url(
+            {% if LANGUAGE_CODE == 'ru' %} 
+                {% static 'img/languages/ru.png' %}
+            {% elif LANGUAGE_CODE == 'en-us' %}
+                {% static 'img/languages/en.png' %}
+            {% elif LANGUAGE_CODE == 'en' %}
+                {% static 'img/languages/en.png' %}
+            {% else %}
+                {% static 'img/languages/en.png' %}
+            {% endif %}
+        );
+    }
+    </style>
+    {% block extra-styles %}{% endblock %}
+
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'img/favicon-152-precomposed.png' %}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'img/favicon-144-precomposed.png' %}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'img/favicon-120-precomposed.png' %}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/favicon-114-precomposed.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon-180-precomposed.png' %}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/favicon-72-precomposed.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'img/favicon-57.png' %}">
+    <link rel="icon" href="{% static 'img/favicon-32.png' %}" sizes="32x32">
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <meta name="msapplication-TileImage" content="{% static 'img/favicon-144.png' %}">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <link rel="icon" sizes="192x192" href="{% static 'img/favicon-192.png' %}">
+</head>
+
+<body>  
+    <div class="Loader"></div>
+
+    {% block navbar %}{% include 'internships/navbar_light.html' %}{% endblock %}
+
+    {% block content %}{% endblock %}
+
+    {% block footer %}{% include 'internships/footer_dark.html' %}{% endblock %}
+
+    <!-- Scripts-->
+    <script type="text/javascript" src="{% static 'plugins/js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plugins/js/viewportchecker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plugins/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plugins/js/bootsnav.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plugins/js/select2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plugins/js/wysihtml5-0.3.0.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plugins/js/bootstrap-wysihtml5.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plugins/js/datedropper.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plugins/js/dropzone.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plugins/js/loader.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plugins/js/owl.carousel.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plugins/js/slick.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plugins/js/gmap3.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plugins/js/jquery.easy-autocomplete.min.js' %}"></script>
+    <!-- Custom Js -->
+    <script src="{% static 'js/custom.js' %}"></script>
+    <script type="text/javascript">
+        $('input[type=file]').customFile();
+    </script>
+    {% block extra-body %}{% endblock %}
+</body>
+</html>

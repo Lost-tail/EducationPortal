@@ -1,0 +1,197 @@
+{% extends 'internships/base.html' %}
+
+{% load i18n %}
+{% load line_break %}
+{% load mathfilters %}
+{% load static %}
+{% load url_replace %}
+
+{% block title %}HEIs Employers / Account{% endblock %}
+
+
+{% block content %}
+<section class="inner-header-title">
+    <div class="container">
+        <h1>{% trans "Personal Account" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+
+<section class="detail-desc detail-organization-account">
+    <div class="container">
+        <div class="ur-detail-wrap top-lay">
+            <div class="ur-detail-box">
+                <div class="ur-caption">
+                    <div class="navigation-account">
+                        <h5 class="ur-title navigation-account-item item" style="display: inline-block; margin-right: 10px"><a href="{% url 'student_personal_account' %}">{{ user.student.full_name }}</a></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="ur-detail-btn btn-box">
+                <a class="btn btn-success" href="{% url 'student_edit' %}">{% trans "Edit Profile" %}</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="full-detail-description full-detail">
+    <div class="container">
+        <div class="full-detail-organization-account">
+            <div class="row">
+                <h3 class="text-center" style="margin-bottom: 50px;">{% trans "My Applications for Internships" %}</h3>
+            </div>
+            {% if messages %}
+                <div class="text-center messages">
+                    {% for message in messages %}
+                        <h3 class="text-{{ message.tags }}">{{ message }}</h3>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if not user.student.internships_applications.count %}
+            <div class="row text-center">
+                <h4>{% trans "You have not applied for any internship" %}</h4>
+                <br>
+                <a href="{% url 'list_internships' %}"><button class="btn btn-default">{% trans "View Internships" %}</button></a>
+            </div>
+            {% endif %}
+            {% for internship_application in pagination_internships_applications %}
+                {% cycle 'start' 1 'end' as position_row silent %}
+                {% if position_row == 'start' %}
+                    <div class="row extra-mrg">
+                {% endif %}
+                        <div class="col-md-4">
+                            <div class="item-card application-card">
+                                <div class="item"><a href="{{ internship_application.internship.get_detail_url }}"><h3>{{ internship_application.internship.name }}</h3></a></div>
+                                <div class="item"><span>{{ internship_application.internship.start_date }} — {{ internship_application.internship.end_date }}</span></div>
+                                <div class="item row-items"><span>{% trans "Call Deadline Date" %}:</span><span>{{ internship_application.internship.applications_deadline }}</span></div>
+                                <br>
+                                <div class="item row-items"><span>{% trans "Application Posted" %}:</span><span>{{ internship_application.created|date }}</span></div>
+                                <div class="item row-items"><span>{% trans "Status" %}:</span><span class="status-success">[{{ internship_application.get_status_display }}]</span></div>
+                                <button type="button" class="btn btn-default btn-detail" data-toggle="modal" data-target="#internship_application_{{ internship_application.id }}">{% trans "Application Details" %}</button>
+                            </div>
+                            <div class="modal fade" id="internship_application_{{ internship_application.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered custom-modal" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalCenterTitle">{% trans "Internship Application" %}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="application-detail">
+                                                <div class="container-fluid">
+                                                    <div class="col-md-5">
+                                                        <div class="student-info">
+                                                            <div class="col-md-6">
+                                                                <div class="img-wrapper">
+                                                                    <a href="{{ internship_application.student.get_detail_url }}" target="_blank"><img src="{% if internship_application.student.photo %}{{ internship_application.student.photo.url }}{% else %}{% static 'img/user.png' %}{% endif %}"></a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="student-main-info">
+                                                                    <a href="{{ internship_application.student.get_detail_url }}" target="_blank">{{ internship_application.student.full_name }}</a>
+                                                                    <br><br>
+                                                                    {% if internship_application.student.birthdate %}
+                                                                        {% trans "Age" %}: {{ internship_application.student.age }}<br>
+                                                                    {% endif %}
+                                                                    {% if internship_application.student.gender %}
+                                                                        {% trans "Gender" %}: {{ internship_application.student.get_gender_display }}
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="student-block-info">
+                                                                    {% trans "Posted" %}: {{ internship_application.created|date }}
+                                                                    <br>
+                                                                    {% trans "Status" %}: {{ internship_application.get_status_display }}
+                                                                    <br>
+                                                                    {% trans "Email" %}: <a href="mailto:{{ internship_application.student.user.email }}">{{ internship_application.student.user.email }}</a>
+                                                                    <br>
+                                                                    {% trans "Phone" %}: 
+                                                                    {% if internship_application.student.contact_phone %}
+                                                                        <a href="tel:{{ internship_application.student.contact_phone }}">{{ internship_application.student.contact_phone }}</a>
+                                                                    {% else %}
+                                                                        {% trans "Not specified" %}
+                                                                    {% endif %}
+                                                                    <br>
+                                                                    {% if internship_application.internship.agreement and internship_application.intern %}
+                                                                        <div class="">
+                                                                            <div style="display: inline-block;">
+                                                                                {% trans "Agreement" %}:
+                                                                            </div>
+                                                                            <div style="display: inline-block;">
+                                                                                <div class="img-copy-agreement">
+                                                                                    <a href="{{ internship_application.internship.agreement.url }}"><img src="{% static 'img/document.png' %}"></a>
+                                                                                </div>
+                                                                            </div>
+                                                                            <form action="{% url 'intern_attach' pk=internship_application.intern.pk %}" method="post" enctype="multipart/form-data">
+                                                                                {% csrf_token %}
+                                                                                <label>{% trans "Copy of the Agreement" %}:</label>
+                                                                                 <div class="custom-file-upload">
+                                                                                    <input type="file" name="copy_agreement" data-value="{% if internship_application.intern.copy_agreement %}{{ internship_application.intern.copy_agreement.url }}{% endif %}" data-label="{% trans 'DOWNLOAD' %}" data-selected="{% trans 'NOT ATTACHED' %}" id="logo-photo-input">
+                                                                                </div>
+                                                                                <button type="submit" class="btn btn-success" style="margin-top: 10px; width: 380px;">{% trans "Update a Copy of the Agreement" %}</button>
+                                                                            </form>
+                                                                        </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <div class="cover-letter">
+                                                            <h2 class="detail-title" style="margin: 0;">{% trans "Cover Letter" %}</h2>
+                                                            <div class="content" {% if internship_application.internship.agreement and internship_application.intern %}style="height: 527px;"{% endif %}>
+                                                                {% autoescape off %}
+                                                                    {% line_break internship_application.cover_letter %}
+                                                                {% endautoescape %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if internship_application.intern.internship.status == 'CLOSE' %}
+                                            {% with intern=internship_application.intern %}
+                                                {% include 'internships/internships/review_block.html' %}
+                                            {% endwith %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                {% if position_row == 'end' or forloop.last %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% if pagination_internships_applications.paginator.num_pages > 1 %}
+            <div class="row">
+                <ul class="pagination">
+                    {% if pagination_internships_applications.has_previous %}
+                        <li><a href="?{% url_replace page=pagination_internships_applications.previous_page_number %}" class="previous"><i class="ti-arrow-left"></i></a></li>
+                        {% if pagination_internships_applications.previous_page_number != 1 %}
+                            <li><a href="?{% url_replace page=1 %}">1</a></li>
+                        {% endif %}
+                        {% if pagination_internships_applications.previous_page_number|sub:1 > 1 %}
+                            <li><a href="#" class="disabled"><i class="fa fa-ellipsis-h"></i></a></li>
+                        {% endif %}
+                        <li><a href="?{% url_replace page=pagination_internships_applications.previous_page_number %}">{{ pagination_internships_applications.previous_page_number }}</a></li>
+                    {% endif %}
+                    <li class="active">
+                        <a href="?{% url_replace page=pagination_internships_applications.number %}">{{ pagination_internships_applications.number}}</a>
+                    </li>
+                    {% if pagination_internships_applications.has_next %}
+                        <li><a href="?{% url_replace page=pagination_internships_applications.next_page_number %}">{{ pagination_internships_applications.next_page_number }}</a></li>
+                        {% if pagination_internships_applications.paginator.num_pages|sub:pagination_internships_applications.next_page_number > 1 %}
+                            <li><a href="#" class="disabled"><i class="fa fa-ellipsis-h"></i></a></li>
+                        {% endif %}
+                        {% if pagination_internships_applications.next_page_number != pagination_internships_applications.paginator.num_pages %}
+                            <li><a href="?{% url_replace page=pagination_internships_applications.paginator.num_pages %}">{{ pagination_internships_applications.paginator.num_pages }}</a></li>
+                        {% endif %}
+                        <li><a href="?{% url_replace page=pagination_internships_applications.next_page_number %}" class="next"><i class="ti-arrow-right"></i></a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

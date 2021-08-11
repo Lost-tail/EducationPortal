@@ -1,0 +1,25 @@
+{% load i18n %}
+{% load static %}
+
+
+<section class="inner-header-title">
+    <div class="container">
+        <h1>{% trans "Personal Account" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+
+<section class="detail-desc detail-organization-account">
+    <div class="container">
+        <div class="ur-detail-wrap top-lay">
+            <div class="ur-detail-box">
+                <div class="ur-caption">
+                    <h4 class="ur-title"><a href="{{ user.student.get_detail_url }}">{{ user.student.full_name }}</a></h4>
+                </div>
+            </div>
+            <div class="ur-detail-btn btn-box">
+                <a class="btn btn-success" href="{% url 'student_edit' %}">{% trans "Edit Profile" %}</a>
+            </div>
+        </div>
+    </div>
+</section>

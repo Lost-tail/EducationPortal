@@ -1,0 +1,62 @@
+{% extends 'admins/base.html' %}
+
+{% block title %}HEIs – Employers / Administrator's page / Edit Intern{% endblock %}
+
+{% block page-title %}Edit Internship «{{ internship_student.internship.name }}» Intern{% endblock %}
+
+{% block content %}
+{% for field in form %}
+    {% for error in field.errors %}
+        <h4 class="text-danger">{{ field.label }}: {{ error|escape }}</h4>
+    {% endfor %}
+{% endfor %}
+{% if messages %}
+    {% for message in messages %}
+        <h4 class="text-{{ message.tags }}">{{ message }}</h4>
+    {% endfor %}
+{% endif %}
+<div class="panel panel-darkblue">
+    <div class="panel-body basic-form-panel">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="exampleInputField1">Application</label>
+                <select class="form-control" name="application" required>
+                    {% for application in applications %}
+                        <option value="{{ application.id }}" {% if application == form.application.id %}selected{% endif %}>{{ application }}</option>
+                    {% endfor %}
+                </select>
+                <small class="form-text text-muted">The Student Application needs to be APPROVED.</small>
+            </div>
+            {% if internship_student.internship.agreement %}
+                <div class="form-group">
+                    <label for="exampleInputField1">Copy of the Agreement</label>
+                    <div>
+                        {{ form.copy_agreement }}
+                    </div>
+                </div>
+            {% endif %}
+            <br>
+            <div class="form-group">
+                <label>Student Review Activated</label>
+                <input type="checkbox" class="form-control" name="student_review_activated" {% if internship_student.review.activated %}checked{% endif %}>
+            </div>
+            <div class="form-group">
+                <label>Student Review</label>
+                <textarea name="student_review" class="form-control" rows="4">{{ internship_student.review.text }}</textarea>
+            </div>
+            <div class="form-group">
+                <label>University Review</label>
+                <textarea name="university_review" class="form-control" rows="4">{{ internship_student.university_review.text }}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Company Review</label>
+                <textarea name="company_review" class="form-control" rows="4">{{ internship_student.company_review.text }}</textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success horizontal-form-button">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

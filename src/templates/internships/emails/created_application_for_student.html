@@ -1,0 +1,10 @@
+{% extends 'internships/emails/base.html' %}
+
+
+{% load i18n %}
+
+
+{% block content %}
+    <h3>{% trans 'Internship' %} "{{ internship_application.internship.name }}"</h3>
+    <p>{% trans 'Your internship application has been successfully submitted. Expect to be reviewed.' %}</p>
+{% endblock %}

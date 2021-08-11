@@ -1,0 +1,44 @@
+html, body {
+    height: 100%;
+    background-color: #f7f7f7;
+    color: #444444;
+    font-size: 14px;
+}
+a{
+    color: #11b719d6;
+    text-decoration: underline;
+    text-underline-position: under;
+}
+a:hover{
+    color: #fff;
+    text-decoration: underline;
+    text-underline-position: under;
+}
+h1, h2, h3, h4, h5{
+    color: #272d3c;
+}
+table{
+    padding: 0 30px 0 30px;
+}
+.core-container{
+    width: 720px;
+    height: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid rgba(88,136,247,0.1);
+}
+.nav{
+    background-color: #35434e;
+    border: 1px solid rgba(88,136,247,0.1);
+}
+.nav__brandname{
+    text-transform: uppercase;
+    color: #fff !important;
+}
+.main-content{
+    padding: 0 30px;
+}
+.footer{
+    border-top: 1px solid rgba(88,136,247,0.1);
+    color: #54667a;
+}

@@ -1,0 +1,66 @@
+{% extends 'internships/base.html' %}
+
+{% load i18n %}
+{% load mathfilters %}
+{% load url_replace %}
+
+{% block title %}HEIs Employers / University List{% endblock %}
+
+
+{% block content %}
+<!-- Title Header Start -->
+<section class="inner-header-title">
+    <div class="container">
+        <h1>{% trans "University List" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+<!-- Title Header End -->
+
+<section>
+    <div class="container">
+        {% for university in pagination_universities %}
+            {% cycle 'start' 'end' as position_row silent %}
+            {% if position_row == 'start' %}
+                <div class="row">
+            {% endif %}
+                    <div class="col-md-6 col-sm-6">
+                        {% include 'internships/university_card.html' %}
+                    </div>
+            {% if position_row == 'end' or forloop.last %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% if pagination_universities.paginator.num_pages > 1 %}
+            <div class="row">
+                <ul class="pagination">
+                    {% if pagination_universities.has_previous %}
+                        <li><a href="?{% url_replace page=pagination_universities.previous_page_number %}" class="previous"><i class="ti-arrow-left"></i></a></li>
+                        {% if pagination_universities.previous_page_number != 1 %}
+                            <li><a href="?{% url_replace page=1 %}">1</a></li>
+                        {% endif %}
+                        {% if pagination_universities.previous_page_number|sub:1 > 1 %}
+                            <li><a href="#" class="disabled"><i class="fa fa-ellipsis-h"></i></a></li>
+                        {% endif %}
+                        <li><a href="?{% url_replace page=pagination_universities.previous_page_number %}">{{ pagination_universities.previous_page_number }}</a></li>
+                    {% endif %}
+                    <li class="active">
+                        <a href="?{% url_replace page=pagination_universities.number %}">{{ pagination_universities.number}}</a>
+                    </li>
+                    {% if pagination_universities.has_next %}
+                        <li><a href="?{% url_replace page=pagination_universities.next_page_number %}">{{ pagination_universities.next_page_number }}</a></li>
+                        {% if pagination_universities.paginator.num_pages|sub:pagination_universities.next_page_number > 1 %}
+                            <li><a href="#" class="disabled"><i class="fa fa-ellipsis-h"></i></a></li>
+                        {% endif %}
+                        {% if pagination_universities.next_page_number != pagination_universities.paginator.num_pages %}
+                            <li><a href="?{% url_replace page=pagination_universities.paginator.num_pages %}">{{ pagination_universities.paginator.num_pages }}</a></li>
+                        {% endif %}
+                        <li><a href="?{% url_replace page=pagination_universities.next_page_number %}" class="next"><i class="ti-arrow-right"></i></a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

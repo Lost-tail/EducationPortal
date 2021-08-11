@@ -1,0 +1,14 @@
+{% extends 'internships/student_edit/base.html' %}
+
+{% load i18n %}
+
+
+{% block student_edit_action %}{% url 'student_edit_social_networks' %}{% endblock %}
+
+{% block student_edit_content %}
+<h2 class="detail-title">{% trans "Social Networks" %}</h2>
+<input type="text" class="form-control" placeholder="Facebook" value="{{ request.user.student.facebook|default_if_none:'' }}" name="facebook">
+<input type="text" class="form-control" placeholder="Twitter" value="{{ request.user.student.twitter|default_if_none:'' }}" name="twitter">
+<input type="text" class="form-control" placeholder="LinkedIn" value="{{ request.user.student.linkedin|default_if_none:'' }}" name="linkedin">
+<input type="text" class="form-control" placeholder="Instagram" value="{{ request.user.student.instagram|default_if_none:'' }}" name="instagram">
+{% endblock %}

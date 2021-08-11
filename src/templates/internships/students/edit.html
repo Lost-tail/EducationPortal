@@ -1,0 +1,738 @@
+{% extends 'internships/base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block title %}HEIs Employers / Edit Profile{% endblock %}
+
+{% block content %}
+<!-- Title Header Start -->
+<section class="inner-header-title">
+    <div class="container">
+        <h1>{% trans "Personal Account" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+
+<section class="detail-desc detail-organization-account">
+    <div class="container">
+        <div class="ur-detail-wrap top-lay">
+            <div class="ur-detail-box">
+                <div class="ur-caption">
+                    <div class="navigation-account">
+                        <h5 class="ur-title navigation-account-item item" style="display: inline-block; margin-right: 10px"><a href="{% url 'student_personal_account' %}">{{ user.student.full_name }}</a></h5>
+                        <div class="navigation-account-item partition">/</div><h5 class="ur-title navigation-account-item item"><a href="{% url 'student_edit' %}">{% trans "Edit Profile" %}</a></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="ur-detail-btn btn-box">
+                <a class="btn btn-success" href="{% url 'student_edit' %}">{% trans "Edit Profile" %}</a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Title Header End -->
+
+<!-- Freelancer Detail Start -->
+<section class="full-detail-description full-detail">
+    <div class="container">
+        <div class="full-detail-organization-account">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-6">
+                <div class="left-side-container">                        
+                    <div>
+                        <h3 style="font-size: 20px; margin-top: 10px;">{% trans "Edit Profile" %}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2 bl-1 br-gary">
+                <a type="button" class="btn btn-success" href="{{ user.student.get_detail_url }}" style="width: 100%">{% trans "Profile" %}</a>
+            </div>
+        </div>
+<section class="student-edit">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-8">
+            <div class="container-detail-box">
+                <form action="{% block student_edit_action %}{% endblock %}" method="post" enctype="multipart/form-data">
+                    <div class="form-messages">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <h3 class="text-{{ message.tags }}">{{ message }}</h3>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% csrf_token %}
+                    {% if form.errors %}
+                        <div class="form-messages">
+                            <h3 class="text-danger">{% trans "Please correct the error below" %}</h3>
+                        </div>
+                    {% endif %}
+                    <h2 class="detail-title">{% trans "Your photo" %}</h2>
+                    <div class="container my-files">
+                        <div class="row" style="margin-bottom: 15px;">
+                            <img src="{% if form.photo.initial %}{{ form.photo.initial.url }}{% else %}{% static 'img/user.png' %}{% endif %}" alt="User Pic" class="img-responsive" style="height:auto; width:auto; max-height:200px; max-width:200px;" border="0" id="student-photo">
+                        </div>
+                        <div class="row">
+                            <div class="custom-file-upload">
+                                <input type="file" name="photo" data-value="{% if form.photo.value %}{{ form.photo.value.url }}{% endif %}" data-label="{% trans 'DOWNLOAD' %}" data-selected="{% trans 'NOT ATTACHED' %}" data-standart="{% trans 'Select a File' %}" id="student-photo-input">
+                            </div>
+                        </div>
+                    </div>
+                    {% for error in form.photo.errors %}
+                        <p class="text-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+                    <h2 class="detail-title">{% trans "Your Profile" %}</h2>
+                    <div class="form-group">
+                        <div class="row row-flex">
+                            <div class="col-sm-6 flex-bottom">
+                                <label>{% trans "Your Full Name" %}</label>
+                                <input type="text" class="form-control" placeholder="{% trans 'Your Full Name' %}" value="{{ form.full_name.value|default_if_none:'' }}" name="full_name" required>
+                            </div>
+                            <div class="col-sm-6 flex-bottom">
+                                <label>{% trans "Phone" %}</label>
+                                <input type="text" class="form-control" placeholder="{% trans 'Phone' %}" value="{{ form.contact_phone.value|default_if_none:'' }}" name="contact_phone" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row row-flex">
+                            <div class="col-sm-6 flex-bottom">
+                                <label>{% trans "Gender" %}</label>
+                                <select class="form-control" name="gender" required>
+                                    {% for id, name in form.gender.field.choices %}
+                                        <option value="{{ id }}" {% if id == form.gender.value %}selected{% endif %}>{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-6 flex-bottom">
+                                <label>{% trans "Birthdate" %}</label>
+                                <input type="text" class="form-control" id="user_birthdate" data-large-mode="true" data-large-default="true" data-theme="my-style" data-lang="{{ LANGUAGE_CODE }}" data-id="datedropper-0" data-format="d/m/Y" data-default-date="{{ form.birthdate.value|date:'m/d/Y' }}" name="birthdate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row row-flex">
+                            <div class="col-sm-6 flex-bottom">
+                                <label>{% trans "City" %}</label>
+                                <input type="text" class="form-control" placeholder="{% trans 'City' %}" value="{{ form.city.value|default_if_none:'' }}" name="city" required>
+                            </div>
+                            <div class="col-sm-6 flex-bottom">
+                                <label>{% trans "Country" %}</label>
+                                <select class="form-control j-category" id="j-category" name="country" required>
+                                    {% for country in countries %}
+                                        <option value="{{ country.id }}" {% if request.user.student.country == country %}selected{% endif %}>{{ country.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>{% trans "Your student card number" %}</label>
+                        <input type="text" class="form-control" placeholder="{% trans 'Student card number' %}" value="{{ form.card_number.value|default_if_none:'' }}" name="card_number" required>
+                    </div>
+                    <div class="form-group">
+                        <label>{% trans "Your University" %}</label>
+                        <select class="form-control" name="university">
+                            <option value="-1">-----------------</option>
+                            {% for university in universities %}
+                                <option value="{{ university.id }}" {% if request.user.student.university == university %}selected{% endif %}>{{ university.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">{% trans "If your university is not on the list, then enter its name and email below" %}</div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row row-flex">
+                            <div class="col-sm-6 flex-bottom">
+                                <label>{% trans "University Name" %}</label>
+                                <input type="text" class="form-control" placeholder="{% trans 'University Name' %}" value="{{ form.university_name.value|default_if_none:'' }}" name="university_name">
+                            </div>
+                            <div class="col-sm-6 flex-bottom">
+                                <label>{% trans "University Email" %}</label>
+                                <input type="email" class="form-control" placeholder="{% trans 'University Email' %}" value="{{ form.university_email.value|default_if_none:'' }}" name="university_email">
+                            </div>
+                        </div>
+                    </div>
+                    {% if request.user.student.overall %}
+                    <ul>
+                        <li>{% trans "Academic merit" %}: {{ request.user.student.academic_merit }}</li>
+                    </ul>
+                    <ul>
+                        <li>{% trans "Research experience" %}: {{ request.user.student.research_experience }}</li>
+                    </ul>
+                    <ul>
+                        <li>{% trans "Motivation" %}: {{ request.user.student.motivation }}</li>
+                    </ul>
+                    <ul>
+                        <li>{% trans "Language skill" %}: {{ request.user.student.language_skill }}</li>
+                    </ul>
+                    <ul>
+                        <li>{% trans "Overall rating" %}: {{ request.user.student.overall }}</li>
+                    </ul>
+                    {% endif %}
+                    <h2 class="detail-title">{% trans "About Me" %}</h2>
+                    <div class="apply-job-detail">
+                        <textarea class="form-control" placeholder="Your CV" rows="20" cols="60" name="main_cv">{{ form.main_cv.value|default_if_none:'' }}</textarea>
+                    </div>
+                    <br>
+
+                    <h2 class="detail-title">{% trans "Education" %}<button type="button" class="btn btn-success" data-toggle="modal" data-target="#create_student_education">{% trans "Add New" %}</button></h2>
+                    <div class="apply-job-detail">
+                        <p>
+                            <ul class="trim-edu-list" id="student_education_list" data-edit="{% trans 'Edit' %}" data-delete="{% trans 'Delete' %}">
+                                {% for education in request.user.student.education.all %}
+                                    <li>
+                                        <div class="trim-edu">
+                                            <h4 class="trim-edu-title">{{ education.university_name }}
+                                                <span class="title-est">{{ education.start_year }} - {{ education.finish_year }}
+                                                </span>
+                                                <span class="title-est">({{ education.locality }})</span>
+                                            </h4>
+                                            <p><strong>{{ education.degree_program }}</strong></p>
+                                            <p>{{ education.study_cycle }}</p>
+                                            <p>{{ education.description }}</p>
+                                            <button type="button" class="btn btn-success edit-student-education-btn" data-toggle="modal" data-target="#edit_student_education_modal" data-id="{{ education.id }}" data-university_name="{{ education.university_name }}" data-start_year="{{ education.start_year }}" data-finish_year="{{ education.finish_year }}" data-locality="{{ education.locality }}" data-degree_program="{{ education.degree_program }}" data-study_cycle="{{ education.study_cycle }}" data-description="{{ education.description }}">{% trans "Edit" %}</button>
+                                            <button type="button" class="btn btn-default delete-student-education" data-id="{{ education.id }}">{% trans "Delete" %}</button>
+                                        </div>
+                                    </li> 
+                                {% endfor %}
+                            </ul>
+                        </p>
+                    </div>
+                    <h2 class="detail-title">{% trans "Work & Experience" %}<button type="button" class="btn btn-success" data-toggle="modal" data-target="#create_student_work">{% trans "Add New" %}</button></h2>
+                    <div class="apply-job-detail">
+                        <p>
+                            <ul class="trim-edu-list" id="student_work_list" data-edit="{% trans 'Edit' %}" data-delete="{% trans 'Delete' %}">
+                                {% for job in request.user.student.work.all %}
+                                    <li>
+                                        <div class="trim-edu">
+                                            <h4 class="trim-edu-title">{{ job.company_name }}
+                                                <span class="title-est">{{ job.start_year }} - {{ job.finish_year }}</span>
+                                                <span class="title-est">({{ job.locality }})</span>
+                                            </h4>
+                                            <p><strong>{{ job.position_held }}</strong></p>
+                                            <p>{{ job.description }}</p>
+                                            <button type="button" class="btn btn-success edit-student-work-btn" data-toggle="modal" data-target="#edit_student_work_modal" data-id="{{ job.id }}" data-company_name="{{ job.company_name }}" data-start_year="{{ job.start_year }}" data-finish_year="{{ job.finish_year }}" data-locality="{{ job.locality }}" data-position_held="{{ job.position_held }}" data-description="{{ job.description }}">{% trans "Edit" %}</button>
+                                            <button type="button" class="btn btn-default delete-student-work" data-id="{{ job.id }}">{% trans "Delete" %}</button>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </p>
+                    </div>
+
+                    <h2 class="detail-title">{% trans "Professional Skills" %}</h2>
+                    <div class="form-group soft_skills">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <button type="button" class="btn btn-success" id="add_student_hard_skill_btn" style="width: 100%; font-size: 10px; margin-top: 3px;">{% trans "Add New" %}</button>
+                            </div>
+                            <div class="col-sm-7">
+                                <input type="text" list="searched_student_hard_skills" class="form-control" name="soft_hard_name" placeholder="{% trans 'Professional Skill' %}" autocomplete="off" id="student_hard_skill" style="transition: color 2s ease 0s;">
+                                <datalist id="searched_student_hard_skills">
+                                    <select class="form-control search-results">
+                                    </select>
+                                </datalist>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="apply-job-detail">
+                        <ul class="skills" id="hard-skills-list">
+                            {% for skill in request.user.student.hard_skills.all %}
+                                <li class="skill-name">{{ skill.name }}<button type="button" class="delete remove-student-hard-skill" data-id="{{ skill.id }}">x</button></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <h2 class="detail-title">{% trans "Soft Skills" %}</h2>
+                    <div class="form-group soft_skills">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <button type="button" class="btn btn-success" id="add_student_soft_skill_btn" style="width: 100%; font-size: 10px; margin-top: 3px;">{% trans "Add New" %}</button>
+                            </div>
+                            <div class="col-sm-7">
+                                <input type="text" list="searched_student_soft_skills" class="form-control" name="soft_skill_name" placeholder="{% trans 'Soft Skill' %}" autocomplete="off" id="student_soft_skill" style="transition: color 2s ease 0s;">
+                                <datalist id="searched_student_soft_skills">
+                                    <select class="form-control search-results">
+                                    </select>
+                                </datalist>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="apply-job-detail">
+                        <ul class="skills" id="soft-skills-list">
+                            {% for skill in request.user.student.soft_skills.all %}
+                                <li class="skill-name">{{ skill.name }}<button type="button" class="delete remove-student-soft-skill" data-id="{{ skill.id }}">x</button></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <h2 class="detail-title">{% trans "Languages" %}</h2>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <button type="button" class="btn btn-success" id="add-student-language-btn" style="width: 100%; font-size: 10px; margin-top: 3px;">{% trans "Add New" %}</button>
+                            </div>
+                            <div class="col-sm-7">
+                                <select class="form-control" id="student-language" name="language" placeholder="{% trans 'Language' %}">
+                                    {% for language in languages %}
+                                        <option value="{{ language.id }}">{{ language.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="apply-job-detail">
+                        <ul class="skills" id="student-languages-list">
+                            {% for language in request.user.student.languages.all %}
+                                <li class="skill-name">{{ language.name }} <button type="button" class="delete remove-student-language" data-id="{{ language.id }}" class="delete">x</button></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <h2 class="detail-title">{% trans "Publications & Papers" %}<button type="button" class="btn btn-success" data-toggle="modal" data-target="#create_student_publication">{% trans "Add New" %}</button></h2>
+                    <div class="apply-job-detail">
+                        <p>
+                            <ul class="apply-job-detail">
+                                <ul class="trim-edu-list" id="student_publications_list" data-edit="{% trans 'Edit' %}" data-delete="{% trans 'Delete' %}">
+                                    {% for publication in request.user.student.publications.all %}
+                                        <li>
+                                            <div class="trim-edu">
+                                                <h4 class="trim-edu-title">{{ publication.title }}
+                                                    <span class="title-est">{{ publication.year }}</span>
+                                                </h4>
+                                                <strong>{{ publication.author }}</strong>
+                                                <p>{{ publication.publisher }}</p>
+                                                <button type="button" class="btn btn-success edit-student-publication-btn" data-toggle="modal" data-target="#edit_student_publication_modal" data-id="{{ publication.id }}" data-title="{{ publication.title }}" data-year="{{ publication.year }}" data-author="{{ publication.author }}" data-publisher="{{ publication.publisher }}">{% trans "Edit" %}</button>
+                                                <button type="button" class="btn btn-default delete-student-publication" data-id="{{ publication.id }}">{% trans "Delete" %}</button>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </ul>
+                        </p>
+                    </div>
+
+                    <h2 class="detail-title">{% trans "Social Networks" %}</h2>
+                    <div class="form-group">
+                        <div class="row row-flex">
+                            <div class="col-sm-6 flex-bottom">
+                                <label>Facebook</label>
+                                <input type="text" class="form-control" placeholder="Facebook" value="{{ form.facebook.value|default_if_none:'' }}" name="facebook">
+                            </div>
+                            <div class="col-sm-6 flex-bottom">
+                                <label>Twitter</label>
+                                <input type="text" class="form-control" placeholder="Twitter" value="{{ form.twitter.value|default_if_none:'' }}" name="twitter">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row row-flex">
+                            <div class="col-sm-6 flex-bottom">
+                                <label>LinkedIn</label>
+                                <input type="text" class="form-control" placeholder="LinkedIn" value="{{ form.linkedin.value|default_if_none:'' }}" name="linkedin">
+                            </div>
+                            <div class="col-sm-6 flex-bottom">
+                                <label>Instagram</label>
+                                <input type="text" class="form-control" placeholder="Instagram" value="{{ form.instagram.value|default_if_none:'' }}" name="instagram">
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="detail-title">{% trans "My Files" %}</h2>
+                    <div class="container my-files">
+                        <div class="row">
+                            <label>{% trans "Copy of Passport or ID" %}</label>
+                        </div>
+                        <div class="row">
+                            <div class="custom-file-upload">
+                                <input type="file" name="identification" data-value="{% if form.identification.value %}{{ form.identification.value.url }}{% endif %}" data-label="{% trans 'DOWNLOAD' %}" data-selected="{% trans 'NOT ATTACHED' %}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for error in form.identification.errors %}
+                                <p class="text-danger">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row">
+                            <label>{% trans "Copy of University Transcript of Records" %}</label>
+                        </div>
+                        <div class="row">
+                            <div class="custom-file-upload">
+                                <input type="file" name="university_transcript_records" data-value="{% if form.university_transcript_records.value %}{{ form.university_transcript_records.value.url }}{% endif %}" data-label="{% trans 'DOWNLOAD' %}" data-selected="{% trans 'NOT ATTACHED' %}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for error in form.university_transcript_records.errors %}
+                                <p class="text-danger">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    
+                        <div class="row">
+                            <label>{% trans "Language Certificate" %}</label>
+                        </div>
+                        <div class="row">
+                            <div class="custom-file-upload">
+                                <input type="file" name="language_certificate" data-value="{% if form.language_certificate.value %}{{ form.language_certificate.value.url }}{% endif %}" data-label="{% trans 'DOWNLOAD' %}" data-selected="{% trans 'NOT ATTACHED' %}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for error in form.language_certificate.errors %}
+                                <p class="text-danger">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="row">
+                            <label>{% trans "University Diploma" %}</label>
+                        </div>
+                        <div class="row">
+                            <div class="custom-file-upload">
+                                <input type="file" name="university_diploma" data-value="{% if form.university_diploma.value %}{{ form.university_diploma.value.url }}{% endif %}" data-label="{% trans 'DOWNLOAD' %}" data-selected="{% trans 'NOT ATTACHED' %}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for error in form.university_diploma.errors %}
+                                <p class="text-danger">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row">
+                            <label>{% trans "Certificate Demonstrating a Situation of Social Disadvantage" %}</label>
+                        </div>
+                        <div class="row">
+                            <div class="custom-file-upload">
+                                <input type="file" name="social_disadvantage_certificate" data-value="{% if form.social_disadvantage_certificate.value %}{{ form.social_disadvantage_certificate.value.url }}{% endif %}" data-label="{% trans 'DOWNLOAD' %}" data-selected="{% trans 'NOT ATTACHED' %}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for error in form.social_disadvantage_certificate.errors %}
+                                <p class="text-danger">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br>
+                    <b>{% trans "Required files" %}:</b> pdf, docx, doc, docm, dotx, dot, dotm, xlsx, xls, xlsm, xltx, xlt, xltm, xlsb, xlam, xla, pptx, ppt, pptm, ppsx, pps, ppsm, potx, pot, potm, ppam, ppa, png, jpg, jpeg, png, gif
+                    <br>
+                    <br>
+                    <div class="clearfix"></div>
+                    <button type="submit" class="update-btn">{% trans "Update Now" %}</button>
+                </form>             
+            </div>
+        </div> 
+    </div>
+    <div class="modal fade modal-edit-student-education" id="edit_student_education_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{% trans "Edit Education" %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form class="edit-education edit-student-education" id="edit-student-education-form" data-id="{{ education.id }}" method="post">
+                        <input type="text" name="pk" hidden>
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>{% trans "University Name" %}</label>
+                            <input type="text" class="form-control" name="university_name" placeholder="{% trans 'University Name' %}" value="{{ education.university_name|default_if_none:'' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Locality" %}</label>
+                            <input type="text" class="form-control" name="locality" value="{{ education.locality|default_if_none:'' }}" placeholder="{% trans 'Locality' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Profession" %}</label>
+                            <input type="text" class="form-control" name="degree_program" value="{{ education.degree_program|default_if_none:'' }}" placeholder="{% trans 'Profession' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Study Cycle" %}</label>
+                            <select class="form-control" name="study_cycle" required placeholder="{% trans 'Study Cycle' %}">
+                                {% for id, name in education_form.study_cycle.field.choices %}
+                                    <option value="{{ id }}" class="student-education-study_cycle" {% if id == education.study_cycle %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Short Description" %}</label>
+                            <input type="text" class="form-control" name="description" value="{{ education.description|default_if_none:'' }}" placeholder="{% trans 'Short Description' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="row row-flex">
+                                <div class="col-sm-6 flex-bottom">
+                                    <label>{% trans "Start Year" %}</label>
+                                    <input type="number" class="form-control" name="start_year" value="{{ education.start_year|default_if_none:'' }}" placeholder="{% trans 'Start Year' %}" required>
+                                </div>
+                                <div class="col-sm-6 flex-bottom">
+                                    <label>{% trans "Finish Year" %}</label>
+                                    <input type="number" class="form-control" name="finish_year" value="{{ education.finish_year|default_if_none:'' }}" placeholder="{% trans 'Finish Year' %}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">{% trans "Update Now" %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="create_student_education" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{% trans "Add Education" %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form class="edit-education" id="add_student_education" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>{% trans "University Name" %}</label>
+                            <input type="text" class="form-control" name="university_name" placeholder="{% trans 'University Name' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Locality" %}</label>
+                            <input type="text" class="form-control" name="locality" placeholder="{% trans 'Locality' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Profession" %}</label>
+                            <input type="text" class="form-control" name="degree_program" placeholder="{% trans 'Profession' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Study Cycle" %}</label>
+                            <select class="form-control" name="study_cycle" placeholder="{% trans 'Study Cycle' %}" required>
+                                {% for id, name in education_form.study_cycle.field.choices %}
+                                    <option value="{{ id }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Short Description" %}</label>
+                            <input type="text" class="form-control" name="description" placeholder="{% trans 'Short Description' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="row row-flex">
+                                <div class="col-sm-6 flex-bottom">
+                                    <label>{% trans "Start Year" %}</label>
+                                    <input type="number" class="form-control" name="start_year" placeholder="{% trans 'Start Year' %}" required>
+                                </div>
+                                <div class="col-sm-6 flex-bottom">
+                                    <label>{% trans "Finish Year" %}</label>
+                                    <input type="number" class="form-control" name="finish_year" placeholder="{% trans 'Finish Year' %}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success add-student-education-button" id="add-student-education-button">{% trans "Add New" %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-edit-student-work" id="edit_student_work_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{% trans "Edit Work & Experience" %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form class="edit-education" id="edit-student-work-form" data-id="{{ job.id }}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="pk" hidden>
+                        <div class="form-group">
+                            <label>{% trans "Company Name" %}</label>
+                            <input type="text" class="form-control" name="company_name" placeholder="{% trans 'Company Name' %}" value="{{ job.company_name|default_if_none:'' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Locality" %}</label>
+                            <input type="text" class="form-control" name="locality" value="{{ job.locality|default_if_none:'' }}" placeholder="{% trans 'Locality' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Position Held" %}</label>
+                            <input type="text" class="form-control" name="position_held" value="{{ job.position_held|default_if_none:'' }}" placeholder="{% trans 'Position Held' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Short Description" %}</label>
+                            <input type="text" class="form-control" name="description" value="{{ job.description|default_if_none:'' }}" placeholder="{% trans 'Short Description' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="row row-flex">
+                                <div class="col-sm-6 flex-bottom">
+                                    <label>{% trans "Start Year" %}</label>
+                                    <input type="number" class="form-control" name="start_year" value="{{ job.start_year|default_if_none:'' }}" placeholder="{% trans 'Start Year' %}" required>
+                                </div>
+                                <div class="col-sm-6 flex-bottom">
+                                    <label>{% trans "Finish Year" %}</label>
+                                    <input type="number" class="form-control" name="finish_year" value="{{ job.finish_year|default_if_none:'' }}" placeholder="{% trans 'Finish Year' %}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">{% trans "Update Now" %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="create_student_work" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{% trans "Add Work & Experience" %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form class="edit-education" id="add_student_work" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>{% trans "Company Name" %}</label>
+                            <input type="text" class="form-control" name="company_name" placeholder="{% trans 'Company Name' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Locality" %}</label>
+                            <input type="text" class="form-control" name="locality" placeholder="{% trans 'Locality' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Position Held" %}</label>
+                            <input type="text" class="form-control" name="position_held" placeholder="{% trans 'Position Held' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Short Description" %}</label>
+                            <input type="text" class="form-control" name="description" placeholder="{% trans 'Short Description' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="row row-flex">
+                                <div class="col-sm-6 flex-bottom">
+                                    <label>{% trans "Start Year" %}</label>
+                                    <input type="number" class="form-control" name="start_year" placeholder="{% trans 'Start Year' %}" required>
+                                </div>
+                                <div class="col-sm-6 flex-bottom">
+                                    <label>{% trans "Finish Year" %}</label>
+                                    <input type="number" class="form-control" name="finish_year" placeholder="{% trans 'Finish Year' %}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">{% trans "Add New" %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="edit_student_publication_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{% trans "Edit Publications & Papers" %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form class="edit-education" id="edit-student-publication-form" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="pk" hidden>
+                        <div class="form-group">
+                            <label>{% trans "Title" %}</label>
+                            <input type="text" class="form-control" name="title" placeholder="{% trans 'Title' %}" value="{{ publication.title|default_if_none:'' }}" required>
+                        </div>
+                        <div class="form-group">
+                             <label>{% trans "Publication Year" %}</label>
+                            <input type="number" class="form-control" name="year" value="{{ publication.year|default_if_none:'' }}" placeholder="{% trans 'Publication Year' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Authors" %}</label>
+                            <input type="text" class="form-control" name="author" value="{{ publication.author|default_if_none:'' }}" placeholder="{% trans 'Authors' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Publisher" %}</label>
+                            <input type="text" class="form-control" name="publisher" value="{{ publication.publisher|default_if_none:'' }}" placeholder="{% trans 'Publisher' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">{% trans "Update Now" %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="create_student_publication" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{% trans "Add Publications & Papers" %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form class="edit-education" id="add_student_publication" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="pk" hidden>
+                        <div class="form-group">
+                            <label>{% trans "Title" %}</label>
+                            <input type="text" class="form-control" name="title" placeholder="{% trans 'Title' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Publication Year" %}</label>
+                            <input type="number" class="form-control" name="year" placeholder="{% trans 'Publication Year' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Authors" %}</label>
+                            <input type="text" class="form-control" name="author" placeholder="{% trans 'Authors' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{% trans "Publisher" %}</label>
+                            <input type="text" class="form-control" name="publisher" placeholder="{% trans 'Publisher' %}" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">{% trans "Add New" %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="add_student_language" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{% trans "Add Language" %}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form class="edit-education" action="{% url 'student_language_add' %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <select class="form-control" name="language" required placeholder="{% trans 'Language' %}">
+                                {% for language in languages %}
+                                    <option value="{{ language.id }}">{{ language.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">{% trans "Add New" %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</section>
+</div>
+</section>
+<!-- Freelancer Detail End -->
+{% endblock %}
+
+{% block extra-body %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}  

@@ -1,0 +1,18 @@
+{% extends 'internships/student_edit/base.html' %}
+
+{% load i18n %}
+
+
+{% block student_edit_action %}{% url 'student_edit' %}{% endblock %}
+
+{% block student_edit_content %}
+<h2 class="detail-title">{% trans "Your Profile" %}</h2>
+<input type="text" class="form-control" placeholder="{% trans 'Your Full Name' %}" value="{{ request.user.student.full_name|default_if_none:'' }}" name="full_name" required>
+<input type="text" class="form-control" id="user_birthdate" data-large-mode="true" data-large-default="true" data-theme="my-style" data-lang="{{ LANGUAGE_CODE }}" data-id="datedropper-0" data-format="d/m/Y" data-default-date="{{ request.user.student.birthdate|date:'m/d/Y' }}" name="birthdate">
+<input type="text" class="form-control" placeholder="{% trans 'City' %}" value="{{ request.user.student.city|default_if_none:'' }}" name="city" required>
+<select class="form-control" id="j-category" name="country" required>
+    {% for country in countries %}
+        <option value="{{ country.id }}" {% if request.user.student.country == country %}selected{% endif %}>{{ country.name }}</option>
+    {% endfor %}
+</select>
+{% endblock %}

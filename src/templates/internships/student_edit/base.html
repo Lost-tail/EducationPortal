@@ -1,0 +1,57 @@
+{% extends 'internships/base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block title %}HEIs Employers / Edit Profile{% endblock %}
+
+{% block content %}
+<!-- Title Header Start -->
+<section class="inner-header-page">
+    <div class="container">
+        <div class="col-md-8">
+            <div class="left-side-container">                        
+                <div class="header-details">
+                    <h4>{% trans "Edit Profile" %}</h4>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="clearfix"></div>
+<!-- Title Header End -->
+
+<!-- Freelancer Detail Start -->
+<section>
+    <div class="container">
+        <div class="col-md-8 col-sm-8">
+            <div class="container-detail-box">
+                <form action="{% block student_edit_action %}{% endblock %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% block student_edit_content %}{% endblock %}
+                    <div class="clearfix"></div>
+                    <button type="submit" class="update-btn">{% trans "Update Now" %}</button>
+                </form>             
+            </div>
+        </div>
+
+        <!-- Sidebar Start-->
+        <div class="col-md-4 col-sm-4">                 
+            <a href="{% url 'student_edit' %}" class="btn btn-success mrg-bot-15 full-width">{% trans "Your Profile" %}</a>
+            <a href="{% url 'student_edit_photo' %}" class="btn btn-success mrg-bot-15 full-width">{% trans "Photo" %}</a>
+            <a href="{% url 'student_edit_main_cv' %}" class="btn btn-success mrg-bot-15 full-width">{% trans "About Me" %}</a>
+            <a href="" class="btn btn-success mrg-bot-15 full-width">{% trans "Education" %}</a>
+            <a href="" class="btn btn-success mrg-bot-15 full-width">{% trans "Work & Experience" %}</a>
+            <a href="" class="btn btn-success mrg-bot-15 full-width">{% trans "Publications & Papers" %}</a>
+            <a href="" class="btn btn-success mrg-bot-15 full-width">{% trans "Professional Skills" %}</a>
+            <a href="" class="btn btn-success mrg-bot-15 full-width">{% trans "Soft Skills" %}</a>
+            <a href="" class="btn btn-success mrg-bot-15 full-width">{% trans "Languages" %}</a>
+            <a href="{% url 'student_edit_social_networks' %}" class="btn btn-success mrg-bot-15 full-width">{% trans "Social Networks" %}</a>
+            <a href="{% url 'student_edit_files' %}" class="btn btn-success mrg-bot-15 full-width">{% trans "My Files" %}</a>
+        </div>
+        <!-- End Sidebar -->    
+    </div>
+</section>
+<!-- Freelancer Detail End -->
+{% endblock %}

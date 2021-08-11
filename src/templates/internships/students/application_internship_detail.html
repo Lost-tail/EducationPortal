@@ -1,0 +1,64 @@
+{% extends 'internships/base.html' %}
+
+{% load i18n %}
+{% load mathfilters %}
+{% load line_break %}
+{% load float_to_string %}
+{% load static %}
+
+{% block title %}HEIs Employers / Internship Application Details{% endblock %}
+
+
+{% block content %}
+{% include 'internships/students/personal_account_header.html' %}
+
+<section class="full-detail-description full-detail application-detail">
+    <div class="text-center">
+        <h3 class="title">{% trans "Application for the internship" %} <a href="{{ internship_application.internship.get_detail_url }}">"{{ internship_application.internship.name }}"</a></h3>
+    </div>
+    <div class="container">
+        <div class="col-md-12">
+        <div class="col-md-5">
+            <div class="student-info">
+                <div class="col-md-6">
+                    <div class="img-wrapper">
+                        <a href="{{ internship_application.student.get_detail_url }}"><img src="{% if internship_application.student.photo %}{{ internship_application.student.photo.url }}{% else %}{% static 'img/profile-user.png' %}{% endif %}"></a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="student-main-info">
+                        <a href="{{ internship_application.student.get_detail_url }}">{{ internship_application.student.full_name }}</a>
+                        <br><br>
+                        {% if internship_application.student.birthdate %}
+                            {% trans "Age" %}: {{ internship_application.student.age }}<br>
+                        {% endif %}
+                        {% if internship_application.student.gender %}
+                            {% trans "Gender" %}: {{ internship_application.student.get_gender_display }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="student-block-info">
+                        {% trans "Posted" %}: {{ internship_application.created|date }}
+                        <br>
+                        {% trans "Status" %}: {{ internship_application.get_status_display }}
+                        <br>
+                        {% trans "Email" %}: <a href="mailto:{{ internship_application.student.user.email }}">{{ internship_application.student.user.email }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="cover-letter">
+                <h2 class="detail-title" style="margin: 0;">{% trans "Cover Letter" %}</h2>
+                <div class="content">
+                    {% autoescape off %}
+                        {% line_break internship_application.cover_letter %}
+                    {% endautoescape %}
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

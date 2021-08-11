@@ -1,0 +1,21 @@
+{% extends 'internships/emails/base.html' %}
+
+
+{% load i18n %}
+{% load line_break %}
+
+
+{% block content %}
+    <h3>{% trans "Internship" %} "{{ internship_student.internship.name }}"</h3>
+    <p>{% trans "Review from" %} {% if university %}"{{ university.name }}"{% else %}"{{ company.name }}"{% endif %}</p>
+    <p>
+        {% autoescape off %}
+            {% if university %}{% line_break internship_student.university_review.text %}{% else %}{% line_break internship_student.company_review.text %}{% endif %}
+        {% endautoescape %}
+    </p>
+    <a href="{{ domain }}{% url 'student_personal_account' %}">
+                <h3 style="color: #11b719d6;
+    text-decoration: underline;
+    text-underline-position: under; ">{% trans "My Personal Account" %}</h3>
+            </a>
+{% endblock %}

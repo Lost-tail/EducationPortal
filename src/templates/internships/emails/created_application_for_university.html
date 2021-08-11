@@ -1,0 +1,13 @@
+{% extends 'internships/emails/base.html' %}
+
+
+{% load i18n %}
+
+
+{% block content %}
+    <h3>{% trans 'Internship' %} "{{ internship_application.internship.name }}"</h3>
+    <p>{% trans 'Received a new application for your internship.' %}</p>
+    <a href="https://work4practice.com{{ internship_application.internship.get_applications_url }}?application_status=CONSIDERED" style="color: #11b719d6;
+    text-decoration: underline;
+    text-underline-position: under;">{% trans "New Applications" %}</a>
+{% endblock %}

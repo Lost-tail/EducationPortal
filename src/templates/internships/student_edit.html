@@ -1,0 +1,55 @@
+{% extends 'internships/base.html' %}
+
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}HEIs Employers / Edit Profile{% endblock %}
+
+{% block content %}
+<form action="#" method="post" enctype="multipart/form-data">
+    <!-- Title Header Start -->
+    <section class="inner-header-page">
+        <div class="container">
+            <div class="col-md-8">
+                <div class="left-side-container">                        
+                    <div class="header-details">
+                        <h4>Edit Profile</h4>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="clearfix"></div>
+    <!-- Title Header End -->
+
+    <!-- Freelancer Detail Start -->
+    <section>
+        <div class="container">
+            <div class="col-md-8 col-sm-8">
+                <div class="container-detail-box">
+                    {% block student_edit_content %}{% endblock %}                   
+                </div>
+            </div>
+
+            <!-- Sidebar Start-->
+            <div class="col-md-4 col-sm-4">                 
+                <a href="" class="btn btn-success mrg-bot-15 full-width">Your Profile</a>
+                <a href="" class="btn btn-success mrg-bot-15 full-width">Photo</a>
+                <a href="" class="btn btn-success mrg-bot-15 full-width">About Me</a>
+                <a href="" class="btn btn-success mrg-bot-15 full-width">Education</a>
+                <a href="" class="btn btn-success mrg-bot-15 full-width">Work & Experience</a>
+                <a href="" class="btn btn-success mrg-bot-15 full-width">Publications & Papers</a>
+                <a href="" class="btn btn-success mrg-bot-15 full-width">Professional Skills</a>
+                <a href="" class="btn btn-success mrg-bot-15 full-width">Soft Skills</a>
+                <a href="" class="btn btn-success mrg-bot-15 full-width">Languages</a>
+                <a href="" class="btn btn-success mrg-bot-15 full-width">Social Networks</a>
+                <a href="" class="btn btn-success mrg-bot-15 full-width">My Files</a>
+            </div>
+            <!-- End Sidebar -->    
+        </div>
+    </section>
+</form>
+<!-- Freelancer Detail End -->
+{% endblock %}

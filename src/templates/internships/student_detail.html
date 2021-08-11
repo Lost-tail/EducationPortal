@@ -1,0 +1,233 @@
+{% extends 'internships/base.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load line_break %}
+
+
+{% block title %}HEIs Employers / Student Profile{% endblock %}
+
+{% block content %}
+<!-- Title Header Start -->
+<section class="inner-header-page">
+    <div class="container">
+        <div class="col-md-8">
+            <div class="left-side-container">
+                <div class="freelance-image">
+                    <img src="{% if student.photo %}{{ student.photo.url }}{% else %}{% static 'img/user.png' %}{% endif %}" alt="UserPic">
+                </div>
+                <div class="header-details">
+                    <h4>{{ student.full_name }} {% if student.birthdate %}({{ student.birthdate }}){% endif %}</h4>                                
+                    <p>{% if student.gender %}{{ student.get_gender_display }}{% endif %}{% if student.birthdate %}, {{ student.age }}{% endif %}</p>
+                    <ul>
+                        <li>{% if student.city %}{{ student.city }}{% endif %}{% if student.country %}, {{ student.country.name }}{% endif %}</li>
+                    </ul>
+                    <ul>
+                        <li>
+                        {% if student.university %}
+                            {% trans "University" %}: {{ student.university.name }}
+                        {% elif student.university_name and student.university_email %}
+                            {% trans "University" %}: {{ student.university_name }}, {{ student.university_email }}
+                        {% elif student.university_name %}
+                            {% trans "University" %}: {{ student.university_name }}
+                        {% elif student.university_email %}
+                            {% trans "University" %}: {{ student.university_email }}
+                        {% endif %}
+                        </li>
+                    </ul>
+                    <ul class="social-info">
+                        {% if student.facebook %}
+                            <li>
+                                <a href='https://www.facebook.com/{{ student.facebook }}'><i class='fa fa-facebook'></i></a>
+                            </li>
+                        {% endif %}
+                        {% if student.twitter %}
+                            <li>
+                                <a href='https://twitter.com/{{ student.twitter }}'><i class='fa fa-twitter'></i></a>
+                            </li>
+                        {% endif %}
+                        {% if student.linkedin %}
+                            <li>
+                                <a href='https://www.linkedin.com/{{ student.linkedin }}'><i class='fa fa-linkedin'></i></a>
+                            </li>
+                        {% endif %}
+                        {% if student.instagram %}
+                            <li>
+                                <a href='https://www.instagram.com/{{ student.instagram }}'><i class='fa fa-instagram'></i></a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% if request.user.student == student %}
+            <div class="col-md-4 bl-1 br-gary">
+                <div class="right-side-detail">
+                    <a href="{% url 'student_edit' %}" class="btn btn-success">{% trans "Edit your profile" %}</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+<div class="clearfix"></div>
+<!-- Title Header End -->
+
+<!-- Freelancer Detail Start -->
+<section>
+    <div class="container">
+        <ul>
+            <li>{% if student.academic_merit %}{% trans "Academic merit" %}: {{ student.academic_merit }}{% endif %}</li>
+        </ul>
+        <ul>
+            <li>{% if student.research_experience %}{% trans "Research experience" %}: {{ student.research_experience }}{% endif %}</li>
+        </ul>
+        <ul>
+            <li>{% if student.motivation %}{% trans "Motivation" %}: {{ student.motivation }}{% endif %}</li>
+        </ul>
+        <ul>
+            <li>{% if student.language_skill %}{% trans "Language skill" %}: {{ student.language_skill }}{% endif %}</li>
+        </ul>
+        <ul>
+            <li>{% if student.overall %}{% trans "Overall rating" %}: {{ student.overall }}{% endif %}</li>
+        </ul>
+        <div class="col-md-8 col-sm-8">
+            <div class="container-detail-box">
+                <h2 class="detail-title">{% trans "About Me" %}</h2>
+                <div class="apply-job-detail">
+                    {% autoescape off %}
+                        <p>{% line_break student.main_cv %}</p>
+                    {% endautoescape %}
+                </div>
+                <br>
+
+                <h2 class="detail-title">{% trans "Education" %}</h2>
+                <div class="apply-job-detail">
+                    <p>
+                        {% if student.education.all %}
+                            <ul class="trim-edu-list">
+                                {% for education in student.education.all %}
+                                    <li>
+                                        <div class="trim-edu">
+                                            <h4 class="trim-edu-title">{{ education.university_name }}
+                                                <span class="title-est">{{ education.start_year }} - {{ education.finish_year }}
+                                                </span>
+                                                <span class="title-est">({{ education.locality }})</span>
+                                            </h4>
+                                            <p><strong>{{ education.degree_program }}</strong></p>
+                                            <p>{{ education.study_cycle }}</p>
+                                            <p>{{ education.description }}</p>
+                                        </div>
+                                    </li>
+                                {% endfor %}          
+                            </ul>
+                        {% endif %}
+                    </p>
+                </div>
+                <br>
+
+                <h2 class="detail-title">{% trans "Work & Experience" %}</h2>
+                <div class="apply-job-detail">
+                    <p>
+                        {% if student.work.all %}
+                            <ul class="trim-edu-list">
+                                {% for job in student.work.all %}
+                                    <li>
+                                        <div class="trim-edu">
+                                            <h4 class="trim-edu-title">{{ job.company_name }}
+                                                <span class="title-est">{{ job.start_year }} - {{ job.finish_year }}</span>
+                                            </h4>
+                                            <strong>{{ job.position_held }}</strong>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </p>
+                </div>
+                <br>
+
+                <h2 class="detail-title">{% trans "Professional Skills" %}</h2>
+                <div class="apply-job-detail">
+                    <ul class="skills">
+                        {% for skill in student.hard_skills.all %}
+                            <li class="skill-name">{{ skill.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <br>
+
+
+                <h2 class="detail-title">{% trans "Soft Skills" %}</h2>
+                <div class="apply-job-detail">
+                    <ul class="skills">
+                        {% for skill in student.soft_skills.all %}
+                            <li class="skill-name">{{ skill.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <br>
+
+
+                <h2 class="detail-title">{% trans "Languages" %}</h2>
+
+                <div class="apply-job-detail">
+                    <ul class="skills">
+                        {% for language in user.student.languages.all %}
+                            <li>{{ language.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <br>
+
+                <h2 class="detail-title">{% trans "Publications & Papers" %}</h2>
+                <div class="apply-job-detail">
+                    <ul class="apply-job-detail">
+                        {% if student.publications.all %}
+                            <ul class="trim-edu-list">
+                                {% for publication in student.publications.all %}
+                                    <li>
+                                        <div class="trim-edu">
+                                            <h4 class="trim-edu-title">{{ publication.title }}
+                                                <span class="title-est">{{ publication.year }}</span>
+                                            </h4>
+                                            <strong>{{ publication.author }}</strong>
+                                            <p>{{ publication.publisher }}</p>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </ul>
+                </div>
+                <br>
+
+                <h2 class="detail-title">{% trans "My Files" %}</h2>
+                <div class="apply-job-detail">
+                    <form>
+                        {% csrf_token %}
+                        <ul class="apply-job-detail">
+                            {% if student.identification %}
+                                <li><b><a href="{{ student.identification.url }}">{% trans "Copy of Passport or ID" %}</a></b></li>
+                            {% endif %}
+                            {% if student.university_transcript_records %}
+                                <li><b><a href="{{ student.university_transcript_records.url }}">{% trans "Copy of University Transcript of Records" %}</a></b></li>
+                            {% endif %}
+                            {% if student.language_certificate %}
+                                <li><b><a href="{{ student.language_certificate.url }}">{% trans "Language Certificate" %}</a></b></li>
+                            {% endif %}
+                            {% if student.university_diploma %}
+                                <li><b><a href="{{ student.university_diploma.url }}">{% trans "University Diploma" %}</a></b></li>
+                            {% endif %}
+                            {% if student.social_disadvantage_certificate %}
+                                <li><b><a href="{{ student.social_disadvantage_certificate.url }}">{% trans "Certificate Demonstrating a Situation of Social Disadvantage" %}</a></b></li>
+                            {% endif %}
+                        </ul>
+                    </form>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Freelancer Detail End -->
+{% endblock %}

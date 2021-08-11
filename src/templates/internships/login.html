@@ -1,0 +1,40 @@
+{% extends 'internships/base.html' %}
+
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}HEIs Employers / Sign In{% endblock %}
+
+{% block content %}
+<section class="login-screen-sec simple-bg-screen" style="background-image:url({% static 'img/authbackgroud.png' %});">
+    <div class="container">
+        <div class="login-screen">
+            <a href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" class="img-responsive" alt=""></a>
+            <form method="post">
+                {% csrf_token %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="form-group text-center message">
+                            <h4 class="text-{{ message.tags }}">{{ message }}</h4>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <input type="email" class="form-control" placeholder="{% trans 'Email' %}" name="email" required>
+                <input type="password" class="form-control" placeholder="{% trans 'Password' %}" name="password" required>
+                <button class="btn btn-login" type="submit">{% trans "Login" %}</button>
+                <span>
+                    {% trans "You Have No Account?" %}
+                    <a href="{% url 'signup' %}">{% trans "Create An Account" %}</a>
+                </span>
+                <span>
+                    <a href="{% url 'forgot_password' %}">{% trans "Forgot Password?" %}</a>
+                </span>
+                <input type="hidden" name="superaction" value="formlogin">
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}{% include 'internships/footer_light.html' %}{% endblock %}

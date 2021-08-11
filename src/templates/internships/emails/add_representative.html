@@ -1,0 +1,18 @@
+{% extends 'internships/emails/base.html' %}
+
+
+{% load i18n %}
+
+
+{% block content %}
+    <p>{% trans "You are registered as a representative. Follow the link and create a password." %}</p>
+    <tr>
+        <td>
+            <a href="{{ domain }}{{ confirmation_user.get_signup_confirm_representative_url }}">
+                <h1 style="color: #11b719d6;
+    text-decoration: underline;
+    text-underline-position: under; ">{% trans "Confirm & Create Password" %}</h1>
+            </a>
+        </td>
+    </tr>
+{% endblock %}

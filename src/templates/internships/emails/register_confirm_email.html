@@ -1,0 +1,15 @@
+{% extends 'internships/emails/base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+    <tr>
+        <td>
+            <a href="https://work4practice.com{{ confirmation_user.get_signup_confirm_email_url }}">
+                <h1 style="color: #11b719d6;
+    text-decoration: underline;
+    text-underline-position: under; ">{% trans "Confirm Email" %}</h1>
+            </a>
+        </td>
+    </tr>
+{% endblock %}

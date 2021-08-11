@@ -1,0 +1,19 @@
+{% extends 'internships/emails/base.html' %}
+
+
+{% load i18n %}
+{% load line_break %}
+
+
+{% block content %}
+    <h3>{% trans "Internship" %} "{{ internship_student.internship.name }}"</h3>
+    <p>{% trans "The student left a review. The administrator will check it and display it on the site." %}</p>
+    <p><b>{% autoescape off %}
+            {% line_break internship_student.review.text %}
+        {% endautoescape %}</b></p>
+    <a href="{{ domain }}{{ internship_student.internship.get_interns_url }}">
+            <h2 style="color: #11b719d6;
+text-decoration: underline;
+text-underline-position: under; ">{% trans "Interns" %}</h2>
+        </a>
+{% endblock %}

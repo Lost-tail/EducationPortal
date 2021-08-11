@@ -1,0 +1,109 @@
+{% extends 'internships/base.html' %}
+
+{% load i18n %}
+{% load mathfilters %}
+{% load static %}
+{% load url_replace %}
+
+{% block title %}HEIs Employers / Add University Representative{% endblock %}
+
+
+{% block content %}
+<section class="inner-header-title">
+    <div class="container">
+        <h1>{% trans "Personal Account" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+
+<section class="detail-desc detail-organization-account">
+    <div class="container">
+        <div class="ur-detail-wrap top-lay">
+            <div class="ur-detail-box">
+                <div class="ur-caption">
+                    <div class="navigation-account">
+                        {% if user.university %}
+                            <h5 class="ur-title navigation-account-item item" style="display: inline-block; margin-right: 10px"><a href="{% url 'organization_personal_account' %}">{{ user.university.name }}</a></h5>
+                        {% elif user.staff_user.staff_type == 'University Representative' %}
+                            <h4 class="ur-title navigation-account-item item"><a href="{% url 'organization_personal_account' %}">{{ user.staff_user.university.name }}</a></h4>
+                        {% elif user.company %}
+                            <h4 class="ur-title navigation-account-item item"><a href="{% url 'organization_personal_account' %}">{{ user.company.name }}</a></h4>
+                        {% elif user.staff_user.staff_type == 'Company Representative' %}
+                            <h4 class="ur-title navigation-account-item item"><a href="{% url 'organization_personal_account' %}">{{ user.staff_user.company.name }}</a></h4>
+                        {% endif %}
+                        <div class="navigation-account-item partition">/</div><h5 class="ur-title navigation-account-item item"><a href="{% url 'add_university_representative' %}">{% trans "Add Representative" %}</a></h5>
+                    </div>
+                </div>
+                <!-- {% if user.staff_user %}
+                    <div class="profile-user-box">
+                        <div class="profile-user-info">
+                            <div class="profile-user-img">
+                                <img src="{% static 'img/profile-user.png' %}">
+                            </div>
+                            <div class="profile-user-name">
+                                {{ user.staff_user.full_name }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %} -->
+            </div>
+            <div class="ur-detail-btn btn-box">
+                {% if user.university %}
+                    <a class="btn btn-success" href="{% url 'internship_create' %}">{% trans "New Internship" %}</a>
+                    <a class="btn btn-success" href="{% url 'add_university_representative' %}">{% trans "Add Representative" %}</a>
+                    <a class="btn btn-success" href="{% url 'university_edit' %}">{% trans "Edit Profile" %}</a>
+                    <a class="btn btn-success" href="{% url 'university_students' %}">{% trans "Students" %}</a>
+                {% elif user.staff_user.staff_type == 'University Representative' %}
+                    <a class="btn btn-success" href="{% url 'internship_create' %}">{% trans "New Internship" %}</a>
+                    <a class="btn btn-success" href="{% url 'add_university_representative' %}">{% trans "Add Representative" %}</a>
+                    <a class="btn btn-success" href="{% url 'university_edit' %}">{% trans "Edit Profile" %}</a>
+                {% elif user.company %}
+                    <a class="btn btn-success" href="{% url 'company_edit' %}">{% trans "Edit Profile" %}</a>
+                {% elif user.staff_user.staff_type == 'Company Representative' %}
+                    <a class="btn btn-success" href="{% url 'company_edit' %}">{% trans "Edit Profile" %}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="full-detail-description full-detail">
+    <div class="container add-representative" style="padding: 0 100px;">
+        <h3 class="text-center" style="margin-bottom: 50px;">{% trans 'Adding New Representative' %}</h3>
+        {% if messages %}
+            <div class="text-center messages">
+                {% for message in messages %}
+                    <h3 class="text-{{ message.tags }}">{{ message }}</h3>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="text-center form-messages add-representative__messages">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <h4 class="text-danger">{{ error }}</h4>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="form-group">
+                <div class="row row-flex">
+                    <div class="col-sm-6 flex-bottom">
+                        <label>{% trans "Representative Email" %}</label>
+                        <input type="text" class="form-control" name="email" placeholder="{% trans 'Representative Email' %}" value="{{ form.email.value|default_if_none:'' }}" required>
+                    </div>
+                    <div class="col-sm-6 flex-bottom">
+                        <label>{% trans "Representative Name" %}</label>
+                        <input type="text" class="form-control" name="full_name" placeholder="{% trans 'Representative Name' %}"  value="{{ form.full_name.value|default_if_none:'' }}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success add-representative__btn">{% trans "Add Representative" %}</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

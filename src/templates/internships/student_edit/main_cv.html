@@ -1,0 +1,13 @@
+{% extends 'internships/student_edit/base.html' %}
+
+{% load i18n %}
+
+
+{% block student_edit_action %}{% url 'student_edit_main_cv' %}{% endblock %}
+
+{% block student_edit_content %}
+<h2 class="detail-title">{% trans "About Me" %}</h2>
+<div class="apply-job-detail">
+    <textarea class="form-control" placeholder="Your CV" rows="20" cols="60" name="main_cv">{{ request.user.student.main_cv|default_if_none:'' }}</textarea>
+</div>
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends 'internships/base.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load line_break %}
+{% load mathfilters %}
+
+
+{% block title %}HEIs Employers / Internship Details{% endblock %}
+
+{% block content %}
+<!-- Title Header Start -->
+<section class="inner-header-title">
+    <div class="container">
+        <h1>{% trans "Internship Detail" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+<!-- Title Header End -->
+
+<section class="detail-desc">
+    <div class="container">
+        <div class="ur-detail-wrap top-lay">
+            <div class="ur-detail-box">
+                <div class="ur-caption">
+                    <h4 class="ur-title">{{ internship.name }}</h4>                              
+                    <p class="ur-location">
+                        <br><i class="ti-location-pin mrg-r-5"></i>{{ internship.country.name }}, {{ internship.university.name }}
+                        <br><br>{% trans "Number Of Positions (Max)" %} - {{ internship.seats_number }}
+                        <br><br>{% trans "Number of Free Positions" %} - {{ internship.number_of_free_positions }}
+                        <div class="form-messages">
+                            {% if not internship.university.activated %}
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <br><h3 class="text-{{ message.tags }}">{{ message }}</h3>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </p>
+                </div>
+            </div>
+            <div class="ur-detail-btn">
+                {% if request.user.student and internship.is_applying %}
+                    {% if request.user.student.confirmed %}
+                        <a href="{{ internship.get_apply_url }}" class="btn btn-warning mrg-bot-10 full-width"><i class="ti-star mrg-r-5"></i>{% trans "Apply" %}</a><br>
+                    {% endif %}
+                {% endif %}
+                {% if user.university == internship.university or user.staff_user.staff_type == 'University Representative' and user.staff_user.university == internship.university %}
+                    <a type="button" href="{{ internship.get_edit_url }}" class="btn btn-success">{% trans "Edit Internship" %}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--  Internship full detail Start -->
+<section class="full-detail-description full-detail">
+    <div class="container">
+        <!--  Internship Description -->
+        <div class="col-md-8 col-sm-12">
+            <div class="full-card">
+                <div class="row row-bottom mrg-0">
+                    <h2 class="detail-title">{% trans "Call Deadline Date" %}</h2>
+                    <p>{{ internship.applications_deadline }}</p>
+                </div>
+
+                <div class="row row-bottom mrg-0">
+                    <h2 class="detail-title">{% trans "Initial Date" %}</h2>
+                    <p>{{ internship.start_date }}</p>
+                </div>
+
+                <div class="row row-bottom mrg-0">
+                    <h2 class="detail-title">{% trans "End Date" %}</h2>
+                    <p>{{ internship.end_date }}</p>
+                </div>
+
+                <div class="row row-bottom mrg-0">
+                    <h2 class="detail-title">{% trans "Status" %}</h2>
+                    <p сlass="status"><b>{{ internship.get_status_display }}</b></p>
+                </div>                                                      
+
+                <div class="row row-bottom mrg-0">
+                    <h2 class="detail-title">{% trans "Required knowledges and skills" %}</h2>
+                    {% autoescape off %}
+                        <p>{% line_break internship.required_knowledge %}</p>
+                    {% endautoescape %}
+                </div>
+
+                <div class="row row-bottom mrg-0">
+                    <h2 class="detail-title">{% trans "Objectives" %}</h2>
+                    {% autoescape off %}
+                        <p>{% line_break internship.objectives %}</p>
+                    {% endautoescape %}
+                </div>
+
+                <div class="row row-bottom mrg-0">
+                    <h2 class="detail-title">{% trans "Short course modules" %}</h2>
+                    {% autoescape off %}
+                        <p>{% line_break internship.short_course_modules %}</p>
+                    {% endautoescape %}
+                </div>
+
+                <div class="row row-bottom mrg-0">
+                    <h2 class="detail-title">{% trans "Internship activities" %}</h2>
+                    {% autoescape off %}
+                        <p>{% line_break internship.description %}</p>
+                    {% endautoescape %}
+                </div>
+
+                <div class="row row-bottom mrg-0">
+                    <h2 class="detail-title">{% trans "Additional notes" %}</h2>
+                    {% autoescape off %}
+                        <p>{% line_break internship.additional_notes %}</p>
+                    {% endautoescape %}
+                </div>
+
+            </div>
+        </div>
+        <!-- End  Internship Description -->
+
+        <div class="col-lg-4 col-md-4">
+            <div class="full-sidebar-wrap">
+                <div class="sidebar-widgets">
+                    <div class="ur-detail-wrap">
+                        <div class="ur-detail-wrap-header">
+                            <h4>{% trans "Internship Overview" %}</h4>
+                        </div>                                    
+                        <div class="ur-detail-wrap-body">
+                            <b>{% trans "University" %}</b><br>
+                            <a href="{{ internship.university.get_detail_url }}">{{ internship.university.name }}</a>
+                            <br>
+                            {% if internship.university.logo %}
+                                <br>
+                                <img src="{{ internship.university.logo.url }}" style="height:auto; width:auto; max-width:100%;" border="0">
+                                <br>
+                            {% endif %}
+                            {% if internship.academic_coordinator %}
+                                <br><b>{% trans "Academic coordinator" %}</b>
+                                <br>
+                                {{ internship.academic_coordinator.name }}
+                                <br>
+                                (<a href='mailto:{{ internship.academic_coordinator.email }}'>
+                                {{ internship.academic_coordinator.email }}</a>)
+                                <br>
+                            {% endif %}
+                            {% if internship.academic_tutor %}
+                                <br><b>{% trans "Academic Tutor" %}</b><br>
+                                {{ internship.academic_tutor.name }}
+                                <br>
+                                (<a href='mailto:{{ internship.academic_tutor.email }}'>
+                                {{ internship.academic_tutor.email }}</a>)
+                                <br>
+                            {% endif %}
+                            
+                            <br><br><b>{% trans "Company" %}</b><br>
+                            <a href="{{ internship.company.get_detail_url }}">{{ internship.company.name }}</a><br>
+                            {% if internship.company.logo %}
+                                <br>
+                                <img src="{{ internship.company.logo.url }}" style="height:auto; width:auto; max-width:100%;" border="0">
+                            {% endif %}
+                            <br>
+                            {% if internship.hosting_institution_tutor %}
+                                <br><b>{% trans "Hosting Institution Tutor" %}</b><br>
+                                {{ internship.hosting_institution_tutor.name }}
+                                <br>
+                                (<a href='mailto:{{ internship.hosting_institution_tutor.email }}'>
+                                {{ internship.hosting_institution_tutor.email }}</a>)
+                                <br>
+                            {% endif %}
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>              
+    </div>
+</section>
+<!--  Internship full detail End -->
+{% endblock %}

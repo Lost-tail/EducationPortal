@@ -1,0 +1,23 @@
+{% extends 'admins/base.html' %}
+
+{% block title %}HEIs – Employers / Administrator's page / Edit Internship{% endblock %}
+
+{% block page-title %}Edit Internship{% endblock %}
+
+{% block content %}
+{% for field in internship_form %}
+    {% for error in field.errors %}
+        <h3 class="text-danger">{{ field.label }}: {{ error|escape }}</h3>
+    {% endfor %}
+{% endfor %}
+{% if messages %}
+    {% for message in messages %}
+        <h3 class="text-{{ message.tags }}">{{ message }}</h3>
+    {% endfor %}
+{% endif %}
+<div class="panel panel-darkblue">
+    <div class="panel-body basic-form-panel">
+        {% include 'admins/internship_form.html' %}
+    </div>
+</div>
+{% endblock %}

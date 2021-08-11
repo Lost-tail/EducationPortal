@@ -1,0 +1,134 @@
+{% load i18n %}
+{% load static %}
+{% load line_break %}
+
+
+<div class="container-fluid reviews">
+    <form method="post" action="{{ intern.get_add_review_url }}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="col-lg-4">
+            <div class="reviews__review">
+                <h3 class="reviews__title">{% trans "University Review" %}</h3>
+                <div class="reviews__text">
+                    {% if intern.university_review %}
+                        {% autoescape off %}
+                            {% line_break intern.university_review.text %}
+                        {% endautoescape %}
+                    {% elif user.university or user.staff_user.staff_type == 'University Representative' %}
+                        <label>{% trans "Input Your Review" %}</label>
+                        <textarea name="text" class="form-control reviews__textarea" required></textarea>
+                        <div class="reviews__wrapper-files">
+                            <input type="file" name="file" data-label="{% trans 'DOWNLOAD' %}" data-selected="{% trans 'NOT ATTACHED' %}" data-standart="{% trans 'Select Files' %}" multiple>
+                        </div>
+                    {% else %}
+                        {% trans "No review yet" %}
+                    {% endif %}
+                </div>
+                <div class="reviews__files">
+                    {% if intern.university_review %}
+                        <div class="reviews__file-item">
+                            {% trans "Files" %}:
+                        </div>
+                        {% for f in intern.university_review.files.all %}
+                            <a class="reviews__file-item" href="{{ f.file.url }}"><img class="reviews__file" src="{% static 'img/document.png' %}"></a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="reviews__review">
+                <h3 class="reviews__title">{% trans "Company Review" %}</h3>
+                <div class="reviews__text">
+                    {% if intern.company_review %}
+                        {% autoescape off %}
+                            {% line_break intern.company_review.text %}
+                        {% endautoescape %}
+                    {% elif user.company or user.staff_user.staff_type == 'Company Representative' %}
+                        <label>{% trans "Input Your Review" %}</label>
+                        <textarea name="text" class="form-control reviews__textarea" required></textarea>
+                        <div class="reviews__wrapper-files">
+                            <input type="file" name="file" data-label="{% trans 'DOWNLOAD' %}" data-selected="{% trans 'NOT ATTACHED' %}" data-standart="{% trans 'Select Files' %}" multiple>
+                        </div>
+                    {% else %}
+                        {% trans "No review yet" %}
+                    {% endif %}
+                </div>
+                <div class="reviews__files">
+                    {% if intern.company_review %}
+                        <div class="reviews__file-item">
+                            {% trans "Files" %}:
+                        </div>
+                        {% for f in intern.company_review.files.all %}
+                            <a class="reviews__file-item" href="{{ f.file.url }}"><img class="reviews__file" src="{% static 'img/document.png' %}"></a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="reviews__review">
+                <h3 class="reviews__title">{% trans "Student Review" %}</h3>
+                <div class="reviews__text">
+                    {% if intern.review %}
+                        {% autoescape off %}
+                            {% line_break intern.review.text %}
+                        {% endautoescape %}
+                    {% elif user.student %}
+                        <label>{% trans "Input Your Review" %}</label>
+                        <textarea name="text" class="form-control reviews__textarea" required></textarea>
+                        <div class="reviews__wrapper-files">
+                            <input type="file" name="file" data-label="{% trans 'DOWNLOAD' %}" data-selected="{% trans 'NOT ATTACHED' %}" data-standart="{% trans 'Select Files' %}" multiple>
+                        </div>
+                    {% else %}
+                        {% trans "No review yet" %}
+                    {% endif %}
+                </div>
+                <div class="reviews__files">
+                    {% if intern.review %}
+                        <div class="reviews__file-item">
+                            {% trans "Files" %}:
+                        </div>
+                        {% for f in intern.review.files.all %}
+                            <a class="reviews__file-item" href="{{ f.file.url }}"><img class="reviews__file" src="{% static 'img/document.png' %}"></a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% if user.university or user.staff_user.staff_type == 'University Representative' %}
+            {% if not intern.university_review %}
+                <div class="col-lg-12">
+                    <div class="reviews__wrapper-btn-send">
+                        <button type="submit" class="btn btn-success">{% trans "Send Your Review" %}</button>
+                    </div>
+                    <div class="reviews__help-text">
+                        {% trans "Maximum attachments: 5" %}
+                    </div>
+                </div>
+            {% endif %}
+        {% elif user.company or user.staff_user.staff_type == 'Company Representative' %}
+            {% if not intern.company_review %}
+                <div class="col-lg-12">
+                    <div class="reviews__wrapper-btn-send">
+                        <button type="submit" class="btn btn-success">{% trans "Send Your Review" %}</button>
+                    </div>
+                    <div class="reviews__help-text">
+                        {% trans "Maximum attachments: 5" %}
+                    </div>
+                </div>
+            {% endif %}
+        {% elif user.student %}
+            {% if not intern.review %}
+                <div class="col-lg-12">
+                    <div class="reviews__wrapper-btn-send">
+                        <button type="submit" class="btn btn-success">{% trans "Send Your Review" %}</button>
+                    </div>
+                    <div class="reviews__help-text">
+                        {% trans "Maximum attachments: 5" %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    </form>
+</div>

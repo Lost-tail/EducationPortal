@@ -1,0 +1,14 @@
+{% load static %}
+{% load i18n %}
+{% load line_break %}
+<div class="public-reviews__review">
+    <div class="public-reviews__title">
+        <div class="public-reviews__student">{{ review.review.student.full_name }}</div>
+        <div class="public-reviews__created">{{ review.created|date }}</div>
+    </div>
+    <div class="public-reviews__internship">
+        {% trans "Internship" %}: {{ review.review.internship.name }}
+    </div>
+    <div class="public-reviews__text">«{% autoescape off %}{% line_break review.text %}{% endautoescape %}»
+    </div>
+</div>

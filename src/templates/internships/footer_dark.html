@@ -1,0 +1,61 @@
+{% load static %}
+{% load i18n %}
+<footer class="footer">
+    <div class="row lg-menu">
+        <div class="container">
+            <div class="col-md-4 col-sm-4">
+                <img src="{% static 'img/footer-logo.png' %}" class="img-responsive" alt="" /> 
+            </div>
+            <div class="col-md-8 co-sm-8 pull-right">
+                <ul>
+                    <li><a href="{% url 'home' %}">{% trans "Home" %}</a></li>
+                    <li><a href="{% url 'about_us' %}">{% trans "About Us" %}</a></li>
+                    <li><a href="{% url 'contact_us' %}">{% trans "Contact Us" %}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row no-padding">
+        <div class="container">
+            <div class="col-md-3 col-sm-12">
+                <div class="footer-widget">
+                    <h3 class="widgettitle widget-title">{% trans "Contact Us" %}</h3>
+                    <div class="textwidget">
+                        <p>{% trans "Miklukho-Maklaya str.6" %}</p>
+                        <p>{% trans "117198, Moscow" %}<br>
+                        {% trans "Russia" %}</p>
+                        <p><strong>{% trans "Email:" %}</strong> <a href="mailto:contact@work4practice.com">contact@work4practice.com</a></p>
+                        <p><strong>{% trans "Call:" %}</strong> <a href="tel:+74999368787">+7 (499) 936-87-87</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-4">
+                <div class="footer-widget"> 
+                <h3 class="widgettitle widget-title">{% trans "Powered by" %}</h3>
+               <div class="taurus_logo"><a href="https://www.taurus-erasmus.eu/" target="_blank"> 
+                <img src="/static/img/taurus_logo_complete.png" class="img-responsive" alt=""></a> </div>
+             <div class="taurus_text"> 
+                 <p> Training Capacities in Agriculture and Urban Rural Interactions for Sustainable development of Megacitites</p>
+             </div>
+            </div>                      
+        </div>   
+            <div class="col-md-3 col-sm-4">
+               
+            </div>
+
+            <div class="col-md-3 col-sm-4">
+               
+            </div>
+        </div>
+    </div>
+    <div class="row copyright">
+        <div class="container">
+            <p>{% trans "«HEIs Employers». Innovative Multi-Functional Platform" %} © 2021<br>
+                <br>
+                <a href="https://admin.work4practice.com"><b>{% trans "Staff Login" %}</b></a>
+            </p>
+        </div>
+    </div>
+</footer>
+<div class="clearfix"></div>

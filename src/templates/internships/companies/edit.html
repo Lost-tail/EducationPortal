@@ -1,0 +1,188 @@
+{% extends 'internships/base.html' %}
+
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}HEIs Employers / Edit Company Profile{% endblock %}
+
+{% block content %}
+<section class="inner-header-title">
+    <div class="container">
+        <h1>{% trans "Personal Account" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+
+<section class="detail-desc detail-organization-account">
+    <div class="container">
+        <div class="ur-detail-wrap top-lay">
+            <div class="ur-detail-box">
+                <div class="ur-caption">
+                    <div class="navigation-account">
+                        {% if user.university %}
+                            <h5 class="ur-title navigation-account-item item" style="display: inline-block; margin-right: 10px"><a href="{% url 'organization_personal_account' %}">{{ user.university.name }}</a></h5>
+                        {% elif user.staff_user.staff_type == 'University Representative' %}
+                            <h4 class="ur-title navigation-account-item item"><a href="{% url 'organization_personal_account' %}">{{ user.staff_user.university.name }}</a></h4>
+                        {% elif user.company %}
+                            <h4 class="ur-title navigation-account-item item"><a href="{% url 'organization_personal_account' %}">{{ user.company.name }}</a></h4>
+                        {% elif user.staff_user.staff_type == 'Company Representative' %}
+                            <h4 class="ur-title navigation-account-item item"><a href="{% url 'organization_personal_account' %}">{{ user.staff_user.company.name }}</a></h4>
+                        {% endif %}
+                        <div class="navigation-account-item partition">/</div><h5 class="ur-title navigation-account-item item"><a href="{% url 'company_edit' %}">{% trans "Edit Company Profile" %}</a></h5>
+                    </div>
+                </div>
+                {% if user.staff_user %}
+                    <div class="profile-user-box">
+                        <div class="profile-user-info">
+                            <div class="profile-user-img">
+                                <img src="{% static 'img/profile-user.png' %}">
+                            </div>
+                            <div class="profile-user-name">
+                                {{ user.staff_user.full_name }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="ur-detail-btn btn-box">
+                {% if user.university %}
+                    <a class="btn btn-success" href="{% url 'internship_create' %}">{% trans "New Internship" %}</a>
+                    <a class="btn btn-success" href="{% url 'university_edit' %}">{% trans "Edit Profile" %}</a>
+                {% elif user.staff_user.staff_type == 'University Representative' %}
+                    <a class="btn btn-success" href="{% url 'internship_create' %}">{% trans "New Internship" %}</a>
+                    <a class="btn btn-success" href="{% url 'university_edit' %}">{% trans "Edit Profile" %}</a>
+                {% elif user.company %}
+                    <a class="btn btn-success" href="{% url 'company_edit' %}">{% trans "Edit Profile" %}</a>
+                {% elif user.staff_user.staff_type == 'Company Representative' %}
+                    <a class="btn btn-success" href="{% url 'company_edit' %}">{% trans "Edit Profile" %}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Title Header End -->
+
+<section class="full-detail-description full-detail">
+    <div class="container">
+        <div class="full-detail-organization-account">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-6">
+                <div class="left-side-container">                        
+                    <div>
+                        <h3 style="font-size: 20px; margin-top: 10px;">{% trans "Edit Company Profile" %}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2 bl-1 br-gary">
+                <a type="button" class="btn btn-success" href="{{ company.get_detail_url }}" style="width: 100%">{% trans "Profile" %}</a>
+            </div>
+        </div>
+<section class="student-edit">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-8">
+            <div class="container-detail-box">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="form-messages">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <h3 class="text-{{ message.tags }}">{{ message }}</h3>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% csrf_token %}
+                    {% if form.errors %}
+                        <div class="form-messages">
+                            <h3 class="text-danger">{% trans "Please correct the error below" %}</h3>
+                        </div>
+                    {% endif %}
+                    <h2 class="detail-title">{% trans "Company Logo" %}</h2>
+                    <div class="container my-files">
+                        <div class="row" style="margin-bottom: 15px;">
+                            <img src="{% if form.logo.initial %}{{ form.logo.initial.url }}{% else %}{% static 'img/user.png' %}{% endif %}" alt="User Pic" style="height:auto; width:auto; max-height:200px; max-width:200px;" border="0" id="logo-photo">
+                        </div>
+                        <div class="row">
+                            <div class="custom-file-upload">
+                                <input type="file" name="logo" data-value="{% if form.logo.value %}{{ form.logo.value.url }}{% endif %}" data-label="{% trans 'DOWNLOAD' %}" data-selected="{% trans 'NOT ATTACHED' %}" data-standart="{% trans 'Select a File' %}" id="logo-photo-input">
+                            </div>
+                        </div>
+                    </div>
+                    {% for error in form.logo.errors %}
+                        <p class="text-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+
+                    <h2 class="detail-title">{% trans "Company" %}</h2>
+                    <label>{% trans 'Company Name' %}</label>
+                    <input type="text" class="form-control" placeholder="{% trans 'Company Name' %}" value="{{ form.name.value|default_if_none:'' }}" name="name" required>
+                    {% for error in form.name.errors %}
+                        <p class="text-danger">{{ error }}</p>
+                    {% endfor %}
+                    <label for="exampleInputField1">{% trans "Website" %}</label>
+                    <input type="text" class="form-control" id="exampleInputField1" name="website" placeholder="{% trans 'Website' %}" value="{{ form.website.value|default_if_none:'' }}">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>{% trans 'Phone' %}</label>
+                            <input type="text" class="form-control" placeholder="{% trans 'Phone' %}" value="{{ form.phone.value|default_if_none:'' }}" name="phone" required>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>{% trans 'Contact Email' %}</label>
+                            <input type="email" class="form-control" placeholder="{% trans 'Contact Email' %}" value="{{ form.email.value|default_if_none:'' }}" name="email">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>{% trans 'Country' %}</label>
+                            <select class="form-control j-category" id="j-category" name="country" required>
+                                {% for country in countries %}
+                                    <option value="{{ country.id }}" {% if user.company.country == country or user.staff_user.company.country == country %}selected{% endif %}>{{ country.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>{% trans 'Address' %}</label>
+                            <input type="text" class="form-control" placeholder="{% trans 'Address' %}" value="{{ form.address.value|default_if_none:'' }}" name="address" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>{% trans 'Estabilished' %}</label>
+                            <input type="number" class="form-control" placeholder="{% trans 'Estabilished' %}" value="{{ form.year_estabilished.value|default_if_none:'' }}" name="year_estabilished">
+                        </div>
+                        <div class="col-sm-6">
+                            <label>{% trans 'Number Of Employees' %}</label>
+                            <input type="number" class="form-control" placeholder="{% trans 'Number Of Employees' %}" value="{{ form.number_of_employees.value|default_if_none:'' }}" name="number_of_employees">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>{% trans 'Hosting Institution Tutor Name' %}</label>
+                            <input type="text" class="form-control" placeholder="{% trans 'Hosting Institution Tutor Name' %}" value="{{ form.contact_person.initial.name|default_if_none:'' }}" name="contact_person_name" required>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>{% trans 'Hosting Institution Tutor Email' %}</label>
+                            <input type="email" class="form-control" placeholder="{% trans 'Hosting Institution Tutor Email' %}" value="{{ form.contact_person.initial.email|default_if_none:'' }}" name="contact_person_email" required>
+                        </div>
+                    </div>
+                    <br>
+
+                    <h2 class="detail-title">{% trans "About Company" %}</h2>
+                    <textarea class="form-control" placeholder="{% trans 'University Name' %}" name="description" rows="10">{{ form.description.value|default_if_none:'' }}</textarea>
+                    <br>
+
+                    <h2 class="detail-title">{% trans "Professional Sphere" %}</h2>
+                    <textarea class="form-control" placeholder="{% trans 'Professional Sphere' %}" name="professional_sphere" rows="10">{{ form.professional_sphere.value|default_if_none:'' }}</textarea>
+                    <br>
+                    <button type="submit" class="update-btn">{% trans "Update Now" %}</button>
+                </form>
+            </div>
+        <div class="col-sm-2">
+        </div>
+    </div>
+</div>
+</section>
+</div>
+</section>
+{% endblock %}

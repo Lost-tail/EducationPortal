@@ -1,0 +1,116 @@
+{% extends 'internships/base.html' %}
+
+{% load i18n %}
+{% load mathfilters %}
+{% load url_replace %}
+
+{% block title %}HEIs Employers / Internships List{% endblock %}
+
+{% block content %}
+<!-- Title Header Start -->
+<section class="inner-header-title">
+    <div class="container">
+        <h1>{% trans "Browse Internships" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+<!-- Title Header End -->
+
+<!-- ========== Begin: Brows job ===============  -->
+<section>
+    <div class="container">
+        <!-- Company Searrch Filter Start -->
+        <div class="row extra-mrg">
+            <div class="wrap-search-filter">
+                <form method="get">
+                    <div class="col-md-4 col-sm-4">
+                        <input type="text" class="form-control" name="keywords" placeholder="{% trans 'Keyword: Name, Tag' %}">
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <select class="form-control" id="j-category" name="country_id">
+                            <option >{% trans "All Countries" %}</option>
+                            {% for country in countries %}
+                                <option value="{{ country.id }}">{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <button type="submit" class="btn btn-primary full-width">{% trans "Search" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Company Search Filter End -->
+        {% for internship in pagination_internships %}
+            <div class="item-click">
+                <article>
+                    <div class="brows-job-list">
+                        <div class="col-md-6 col-sm-6">
+                            <div class="item-fl-box">
+                                <div class="brows-job-position">
+                                    <h3><a href="{{ internship.get_detail_url }}">{{ internship.name }}</a></h3>
+                                    <p>
+                                        <span><b><a target="_blank" href="{{ internship.university.get_detail_url }}" class="extra-link">{{ internship.university.name }}</a></b></span>
+                                    </p>
+                                    <p>
+                                        <span><b><a target="_blank" href="{{ internship.company.get_detail_url }}" class="extra-link">{{ internship.company.name }}</a></b></span><span class="brows-job-sallery"><br>{% trans "Initial Date" %}: {{ internship.start_date }} — {% trans "End Date" %}: {{ internship.end_date }}</span>
+                                        <span class="job-type cl-success bg-trans-success">[{{ internship.status }}]</span>                                                
+                                    </p>
+
+                                    <p>{% trans "Call Deadline Date" %}: {{ internship.applications_deadline }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <div class="brows-job-location">
+                                <p><i class="fa fa-map-marker"></i>{{ internship.country.name }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-2">
+                            <div class="brows-job-link">
+                                <a href="{{ internship.get_detail_url }}" class="btn btn-default">{% trans "Details" %}</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        {% endfor %}
+
+        {% if not pagination_internships %}
+            <br><br><br><b>Nothing found</b><br><br><br><br>
+        {% endif %}
+
+        {% if pagination_internships.paginator.num_pages > 1 %}
+            <div class="row">
+                <ul class="pagination">
+                    {% if pagination_internships.has_previous %}
+                        <li><a href="?{% url_replace page=pagination_internships.previous_page_number %}" class="previous"><i class="ti-arrow-left"></i></a></li>
+                        {% if pagination_internships.previous_page_number != 1 %}
+                            <li><a href="?{% url_replace page=1 %}">1</a></li>
+                        {% endif %}
+                        {% if pagination_internships.previous_page_number|sub:1 > 1 %}
+                            <li><a href="#" class="disabled"><i class="fa fa-ellipsis-h"></i></a></li>
+                        {% endif %}
+                        <li><a href="?{% url_replace page=pagination_internships.previous_page_number %}">{{ pagination_internships.previous_page_number }}</a></li>
+                    {% endif %}
+                    <li class="active">
+                        <a href="?{% url_replace page=pagination_internships.number %}">{{ pagination_internships.number}}</a>
+                    </li>
+                    {% if pagination_internships.has_next %}
+                        <li><a href="?{% url_replace page=pagination_internships.next_page_number %}">{{ pagination_internships.next_page_number }}</a></li>
+                        {% if pagination_internships.paginator.num_pages|sub:pagination_internships.next_page_number > 1 %}
+                            <li><a href="#" class="disabled"><i class="fa fa-ellipsis-h"></i></a></li>
+                        {% endif %}
+                        {% if pagination_internships.next_page_number != pagination_internships.paginator.num_pages %}
+                            <li><a href="?{% url_replace page=pagination_internships.paginator.num_pages %}">{{ pagination_internships.paginator.num_pages }}</a></li>
+                        {% endif %}
+                        <li><a href="?{% url_replace page=pagination_internships.next_page_number %}" class="next"><i class="ti-arrow-right"></i></a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+</div>
+</section>
+<!-- ========== Begin: Brows job End ===============  -->
+
+{% endblock %}

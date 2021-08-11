@@ -1,0 +1,91 @@
+{% load i18n %}
+{% load mathfilters %}
+{% load line_break %}
+{% load float_to_string %}
+{% load static %}
+
+<div class="container-fluid application-detail">
+    <div class="col-lg-5">
+        <div class="student-info">
+            <div class="col-lg-6">
+                <div class="img-wrapper">
+                    <a href="{{ internship_application.student.get_detail_url }}" target="_blank"><img src="{% if internship_application.student.photo %}{{ internship_application.student.photo.url }}{% else %}{% static 'img/user.png' %}{% endif %}"></a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="student-main-info">
+                    <a href="{{ internship_application.student.get_detail_url }}" target="_blank">{{ internship_application.student.full_name }}</a>
+                    <br>
+                    <a type="button" class="btn btn-default btn-student-profile" href="{{ internship_application.student.get_detail_url }}" target="_blank">{% trans "Student Profile" %}</a>
+                    <br><br>
+                    {% if internship_application.student.birthdate %}
+                        {% trans "Age" %}: {{ internship_application.student.age }}<br>
+                    {% endif %}
+                    {% if internship_application.student.gender %}
+                        {% trans "Gender" %}: {{ internship_application.student.get_gender_display }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="student-block-info">
+                    {% trans "Posted" %}: {{ internship_application.created|date }}
+                    <br>
+                    {% trans "Status" %}: {{ internship_application.get_status_display }}
+                    <br>
+                    {% trans "Email" %}: <a href="mailto:{{ internship_application.student.user.email }}">{{ internship_application.student.user.email }}</a>
+                    <br>
+                    {% trans "Phone" %}: 
+                    {% if internship_application.student.contact_phone %}
+                        <a href="tel:{{ internship_application.student.contact_phone }}">{{ internship_application.student.contact_phone }}</a>
+                    {% else %}
+                        {% trans "Not specified" %}
+                    {% endif %}
+                    <br>
+                    {% trans "Rating" %}: {% float_to_string internship_application.university_assessment %} / 10
+                    {% if user.university or user.staff_user.staff_type == 'University Representative' %}
+                        <button class="btn btn-default btn-edit-rating">{% trans "Edit" %}</button>
+                    {% endif %}
+                    <div class="copy-agreement">
+                        <div style="display: inline-block;">{% trans "Copy of Agreement" %}:</div>
+                        <div style="display: inline-block;">
+                            {% if not internship_application.intern.copy_agreement %}
+                                {% trans "Not specified" %}
+                            {% else %}
+                                <div class="img-copy-agreement">
+                                    <a href="{{ internship_application.intern.copy_agreement.url }}"><img src="{% static 'img/document.png' %}"></a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if user.university or user.staff_user.staff_type == 'University Representative' %}
+                {% if internship_application.status == 'CONSIDERED' %}
+                    <div class="col-lg-12">
+                        <div class="block-approve">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="col-lg-6" style="padding-right: 15px">
+                                    <button type="submit" formaction="{{ internship_application.get_approve_url }}" class="btn btn-success">{% trans "Approve" %}</button>
+                                </div>
+                                <div class="col-lg-6" style="padding-left: 15px">
+                                    <button type="submit" formaction="{{ internship_application.get_reject_url }}" class="btn btn-default">{% trans "Reject" %}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="cover-letter">
+            <h2 class="detail-title" style="margin: 0;">{% trans "Cover Letter" %}</h2>
+            <div class="content">
+                {% autoescape off %}
+                    {% line_break internship_application.cover_letter %}
+                {% endautoescape %}
+            </div>
+        </div>
+    </div>
+</div>

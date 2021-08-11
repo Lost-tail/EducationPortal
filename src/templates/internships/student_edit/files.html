@@ -1,0 +1,43 @@
+{% extends 'internships/student_edit/base.html' %}
+
+{% load i18n %}
+
+
+{% block student_edit_action %}{% url 'student_edit_files' %}{% endblock %}
+
+{% block student_edit_content %}
+<h2 class="detail-title">{% trans "My Files" %}</h2>
+ 
+<b>
+    <a href="{% if request.user.student.identification %}{{ request.user.student.identification.url }}{% endif %}">{% trans "Copy of Passport or ID" %}</a>
+</b>
+<input type="file" name="identification">
+<br>
+
+<b>
+    <a href="{% if request.user.student.university_transcript_records %}{{ request.user.student.university_transcript_records.url }}{% endif %}">{% trans "Copy of University Transcript of Records" %}</a>
+</b>
+<input type="file" name="university_transcript_records">
+<br>
+
+<b>
+    <a href="{% if request.user.student.language_certificate %}{{ request.user.student.language_certificate.url }}{% endif %}">{% trans "Language Certificate" %}</a>
+</b>
+<input type="file" name="language_certificate">
+<br>
+
+<b>
+    <a href="{% if request.user.student.university_diploma %}{{ request.user.student.university_diploma.url }}{% endif %}">{% trans "University Diploma" %}</a>
+</b>
+<input type="file" name="university_diploma">
+<br>
+
+<b>
+    <a href="{% if request.user.student.social_disadvantage_certificate %}{{ request.user.student.social_disadvantage_certificate.url }}{% endif %}">{% trans "Certificate Demonstrating a Situation of Social Disadvantage" %}</a>
+</b>
+<input type="file" name="social_disadvantage_certificate">
+<br>
+
+<b>{% trans "Required files" %}:</b> pdf, docx, doc, docm, dotx, dot, dotm, xlsx, xls, xlsm, xltx, xlt, xltm, xlsb, xlam, xla, pptx, ppt, pptm, ppsx, pps, ppsm, potx, pot, potm, ppam, ppa, png, jpg, jpeg, png, gif
+<br>
+{% endblock %}

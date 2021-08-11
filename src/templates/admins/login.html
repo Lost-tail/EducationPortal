@@ -1,0 +1,39 @@
+{% extends 'admins/base.html' %}
+
+{% block title %}HEIs – Employers / Administrator's page / Login{% endblock %}
+
+
+{% block body %}
+ <div class="page-container login-page">
+    <!-- Page Content -->
+    <div class="page-content">
+        <!-- Page Inner -->
+        <div class="page-inner">
+            <div id="main-wrapper">
+                <div class="row">
+                    <div class="col-md-3 col-login-box-alt">
+                        <div class="panel panel-darkblue login-box">
+                            <div class="panel-body">
+                                <a href="index.html" class="logo-name">HEIs – Employers</a>
+                                <p class="m-t-md">Administrator's page</p>
+                                <form class="m-t-md" method="post">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <input type="email" name="email" class="form-control" placeholder="Email" required="">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="password" class="password form-control" placeholder="Password" required="">
+                                    </div>
+                                    <button type="submit" class="btn btn-success btn-block">Sign In</button>
+                                    <br>
+                                </form>
+                                <p class="text-center m-t-xs text-sm login-footer">«HEIs Employers»</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- Main Wrapper -->
+        </div><!-- /Page Inner -->
+    </div><!-- /Page Content -->
+</div><!-- /Page Container -->
+{% endblock %}

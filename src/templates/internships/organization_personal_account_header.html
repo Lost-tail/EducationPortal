@@ -1,0 +1,58 @@
+{% load i18n %}
+{% load static %}
+
+
+<section class="inner-header-title">
+    <div class="container">
+        <h1>{% trans "Personal Account" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+
+<section class="detail-desc detail-organization-account">
+    <div class="container">
+        <div class="ur-detail-wrap top-lay">
+            <div class="ur-detail-box">
+                <div class="ur-caption">
+                    <div class="navigation-account">
+                        {% if user.university %}
+                            <h5 class="ur-title navigation-account-item" style="display: inline-block;"><a href="{% url 'organization_personal_account' %}">{{ user.university.name }}</a></h5>
+                        {% elif user.staff_user.staff_type == 'University Representative' %}
+                            <h4 class="ur-title navigation-account-item"><a href="{% url 'organization_personal_account' %}">{{ user.staff_user.university.name }}</a></h4>
+                        {% elif user.company %}
+                            <h4 class="ur-title navigation-account-item"><a href="{% url 'organization_personal_account' %}">{{ user.company.name }}</a></h4>
+                        {% elif user.staff_user.staff_type == 'Company Representative' %}
+                            <h4 class="ur-title navigation-account-item"><a href="{% url 'organization_personal_account' %}">{{ user.staff_user.company.name }}</a></h4>
+                        {% endif %}
+                        <div class="navigation-account-item partition">/</div><h5 class="navigation-account-item">Internships</h5>
+                    </div>
+                </div>
+                {% if user.staff_user %}
+                    <div class="profile-user-box">
+                        <div class="profile-user-info">
+                            <div class="profile-user-img">
+                                <img src="{% static 'img/profile-user.png' %}">
+                            </div>
+                            <div class="profile-user-name">
+                                {{ user.staff_user.full_name }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="ur-detail-btn btn-box">
+                {% if user.university %}
+                    <a class="btn btn-success" href="{% url 'internship_create' %}">{% trans "New Internship" %}</a>
+                    <a class="btn btn-success" href="{% url 'university_edit' %}">{% trans "Edit Profile" %}</a>
+                {% elif user.staff_user.staff_type == 'University Representative' %}
+                    <a class="btn btn-success" href="{% url 'internship_create' %}">{% trans "New Internship" %}</a>
+                    <a class="btn btn-success" href="{% url 'university_edit' %}">{% trans "Edit Profile" %}</a>
+                {% elif user.company %}
+                    <a class="btn btn-success" href="{% url 'company_edit' %}">{% trans "Edit Profile" %}</a>
+                {% elif user.staff_user.staff_type == 'Company Representative' %}
+                    <a class="btn btn-success" href="{% url 'company_edit' %}">{% trans "Edit Profile" %}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>

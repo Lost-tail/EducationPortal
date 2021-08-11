@@ -1,0 +1,39 @@
+{% load i18n %}
+{% load mathfilters %}
+
+
+<div class="jump-block internship-card">
+    <h3 class="internship-card__title">
+       {{ internship.name }}
+    </h3>
+    <div class="internship-card__period">
+        {{ internship.start_date }} - {{ internship.end_date }}
+    </div>
+    <div class="internship-card__info">
+        <div class="internship-card__items">
+            <div class="internship-card__label">{% trans "University" %}</div>
+            <div class="internship-card__item"><a href="{{ internship.university.get_detail_url }}" class="internship-card__link">{{ internship.university.name }}</a></div>
+        </div>
+        <div class="internship-card__items">
+            <div class="internship-card__label">{% trans "Company" %}</div>
+            <div class="internship-card__item"><a href="{{ internship.company.get_detail_url }}" class="internship-card__link">{{ internship.company.name }}</a></div>
+        </div>
+        <div class="internship-card__items">
+            <div class="internship-card__label">{% trans "Country" %}</div>
+            <div class="internship-card__item">{{ internship.country.name }}</div>
+        </div>
+        <div class="internship-card__items">
+            <div class="internship-card__label">{% trans "Status" %}</div>
+            <div class="internship-card__item"><span class="internship-card__status status-success">[{{ internship.get_status_display }}]</span>{% if internship.status == 'CALL' %}<span class="internship-card__call-deadline">{% trans "Until" %} {{ internship.applications_deadline }}</span>{% endif %}</div>
+        </div>
+      
+            <div class="internship-card__items">
+                <div class="internship-card__label">{% trans "Interns" %}</div>
+                <div class="internship-card__item">{{ internship.number_of_free_positions }} of {{ internship.seats_number }} {% trans "remaining" %}</div>
+            </div>
+        
+    </div>
+    <div class="internship-card__btn-wrapper">
+        <a href="{{ internship.get_detail_url }}" type="button" class="btn btn-success internship-card__btn" value='{% trans "Details & Apply" %}'>{% trans "Details & Apply" %}</a>
+    </div>
+</div>

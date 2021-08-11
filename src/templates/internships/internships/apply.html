@@ -1,0 +1,47 @@
+{% extends 'internships/base.html' %}
+
+{% load i18n %}
+
+
+{% block title %}HEIs Employers / Apply{% endblock %}
+
+{% block content %}
+<!-- Title Header Start -->
+<section class="inner-header-page">
+    <div class="container">
+            <div class="col-md-8">
+                <div class="left-side-container">
+                    <div class="header-details">
+                        <h4>{% trans "Apply / Motivation Letter" %}</h4>
+                        <br>
+                        <h4>{{ request.user.student.full_name }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="clearfix"></div>
+    <!-- Title Header End -->
+
+    <!-- Freelancer Detail Start -->
+    <section>
+        <div class="container">
+            <div class="col-md-8 col-sm-8">
+                <div class="container-detail-box">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="apply-job-header">
+                            <h4>{% trans "Your Motivation Letter" %}</h4>
+                        </div>
+
+                        <div class="apply-job-detail">
+                            <textarea class="form-control" placeholder="{% trans 'Your Motivation Letter' %}" rows="30" cols="60" name="cover_letter" required></textarea>
+                        </div>
+                        <button type="submit" class="update-btn">{% trans "Send Motivation Letter" %}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+</section>
+<!-- Freelancer Detail End -->
+{% endblock %}

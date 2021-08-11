@@ -1,0 +1,161 @@
+{% load i18n %}
+{% load static %}
+{% load swap_month_and_date %}
+{% load float_to_string %}
+{% if internship_form.errors %}
+    <div class="form-messages">
+        <h3 class="text-danger">{% trans "Please correct the error below" %}</h3>
+    </div>
+{% endif %}
+<h2 class="detail-title internship-activated-wrapper">{% trans "Internship" %}
+    <label class="internship-activated-label">
+        <div class="internship-activated-label-text">{% trans "Published" %}</div>
+        <div class="wrapper">
+            <label class="internship-activated">
+                <div class="toggle">
+                    <input class="toggle-state" type="checkbox" name="activated" value="check" {% if internship_form.activated.value %}checked{% endif %}>
+                    <div class="toggle-inner">
+                        <div class="indicator"></div>
+                    </div>
+                    <div class="active-bg"></div>
+                </div>
+            </label>
+        </div>
+    </label>
+</h2>
+<div class="form-group">
+    <label>{% trans "Internship Name" %}</label>
+    <input type="text" class="form-control" placeholder="{% trans 'Internship Name' %}" value="{{ internship_form.name.value|default_if_none:'' }}" name="name" required>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-sm-6">
+            <label>{% trans "Country" %}</label>
+            <select class="form-control j-category" id="j-category" name="country" required>
+                {% for country in countries %}
+                    <option value="{{ country.id }}" {% if internship.country == country %}selected{% endif %}>{{ country.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-sm-6">
+            <label>{% trans "Company" %}</label>
+            <select class="form-control" id="select-company" name="company" required>
+                {% for company in companies %}
+                <option value="{{ company.id }}" {% if company.country == company %}selected{% endif %}>{{ company.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row row-flex">
+        <div class="col-sm-3 flex-bottom">
+            <label>{% trans "Number of Positions" %}</label>
+            <input type="number" class="form-control" placeholder="{% trans 'Internship Name' %}" value="{{ internship_form.seats_number.value|default_if_none:'' }}" name="seats_number" required>
+        </div>
+        <div class="col-sm-3 flex-bottom">
+            <label>{% trans "Call Deadline Date" %}</label>
+            <input type="text" class="form-control" id="internship_applications_deadline" data-large-mode="true" data-large-default="true" data-theme="my-style" data-lang="{{ LANGUAGE_CODE }}" data-id="datedropper-0" data-format="d/m/Y" data-default-date="{% if internship_form.applications_deadline.value|date %}{{ internship_form.applications_deadline.value|date:'m/d/Y' }}{% else %}{% swap_month_and_date internship_form.applications_deadline.value %}{% endif %}" name="applications_deadline" data-min-date="05/6/2021">
+        </div>
+        <div class="col-sm-3 flex-bottom">
+            <label>{% trans "Initial Date" %}</label>
+            <input type="text" class="form-control" id="internship_start_date" data-large-mode="true" data-large-default="true" data-theme="my-style" data-lang="{{ LANGUAGE_CODE }}" data-id="datedropper-0" data-format="d/m/Y" data-default-date="{% if internship_form.start_date.value|date %}{{ internship_form.start_date.value|date:'m/d/Y' }}{% else %}{% swap_month_and_date internship_form.start_date.value %}{% endif %}" name="start_date">
+        </div>
+        <div class="col-sm-3 flex-bottom">
+            <label>{% trans "End Date" %}</label>
+            <input type="text" class="form-control" id="internship_end_date" data-large-mode="true" data-large-default="true" data-theme="my-style" data-lang="{{ LANGUAGE_CODE }}" data-id="datedropper-0" data-format="d/m/Y" data-default-date="{% if internship_form.end_date.value|date %}{{ internship_form.end_date.value|date:'m/d/Y' }}{% else %}{% swap_month_and_date internship_form.end_date.value %}{% endif %}" name="end_date">
+        </div>
+    </div>
+    <div class="row row-flex">
+        <div class="col-sm-3 flex-bottom">
+            {% for error in internship_form.seats_number.errors %}
+                <p class="text-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+        <div class="col-sm-3 flex-bottom">
+            {% for error in internship_form.applications_deadline.errors %}
+                <p class="text-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+        <div class="col-sm-3 flex-bottom">
+            {% for error in internship_form.start_date.errors %}
+                <p class="text-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+        <div class="col-sm-3 flex-bottom">
+            {% for error in internship_form.end_date.errors %}
+                <p class="text-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row row-flex">
+        <div class="col-sm-6 flex-bottom">
+            <label>{% trans 'Academic Coordinator Name' %}</label>
+            <input type="text" class="form-control" placeholder="{% trans 'Academic Coordinator Name' %}" value="{{ academic_coordinator_form.name.value|default_if_none:'' }}" name="academic_coordinator_name" required>
+        </div>
+        <div class="col-sm-6 flex-bottom">
+            <label>{% trans 'Academic Coordinator Email' %}</label>
+            <input type="email" class="form-control" placeholder="{% trans 'Academic Coordinator Email' %}" value="{{ academic_coordinator_form.email.value|default_if_none:'' }}" name="academic_coordinator_email" required>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row row-flex">
+        <div class="col-sm-6 flex-bottom">
+            <label>{% trans 'Academic Tutor Name' %}</label>
+            <input type="text" class="form-control" placeholder="{% trans 'Academic Tutor Name' %}" value="{{ academic_tutor_form.name.value|default_if_none:'' }}" name="academic_tutor_name" required>
+        </div>
+        <div class="col-sm-6 flex-bottom">
+            <label>{% trans 'Academic Tutor Email' %}</label>
+            <input type="email" class="form-control" placeholder="{% trans 'Academic Tutor Email' %}" value="{{ academic_tutor_form.email.value|default_if_none:'' }}" name="academic_tutor_email" required>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row row-flex">
+        <div class="col-sm-6 flex-bottom">
+            <label>{% trans 'Hosting Institution Tutor Name' %}</label>
+            <input type="text" class="form-control" placeholder="{% trans 'Hosting Institution Tutor Name' %}" value="{{ hosting_institution_tutor_form.name.value|default_if_none:'' }}" name="hosting_institution_tutor_name" required>
+        </div>
+        <div class="col-sm-6 flex-bottom">
+            <label>{% trans 'Hosting Institution Tutor Email' %}</label>
+            <input type="email" class="form-control" placeholder="{% trans 'Hosting Institution Tutor Email' %}" value="{{ hosting_institution_tutor_form.email.value|default_if_none:'' }}" name="hosting_institution_tutor_email" required>
+        </div>
+    </div>
+</div>
+<br>
+<h2 class="detail-title">{% trans "Required knowledges and skills" %}</h2>
+<textarea class="form-control" placeholder="{% trans 'Required knowledges and skills' %}" name="required_knowledge" required rows="10">{{ internship_form.required_knowledge.value|default_if_none:'' }}</textarea>
+<br>
+
+<h2 class="detail-title">{% trans "Objectives" %}</h2>
+<textarea class="form-control" placeholder="{% trans 'Objectives' %}" name="objectives" required rows="10">{{ internship_form.objectives.value|default_if_none:'' }}</textarea>
+<br>
+
+<h2 class="detail-title">{% trans "Short course modules" %}</h2>
+<textarea class="form-control" placeholder="{% trans 'Short course modules' %}" name="short_course_modules" required rows="10">{{ internship_form.short_course_modules.value|default_if_none:'' }}</textarea>
+<br>
+
+<h2 class="detail-title">{% trans "Internship activities" %}</h2>
+<textarea class="form-control" placeholder="{% trans 'Internship activities' %}" name="description" required rows="10">{{ internship_form.description.value|default_if_none:'' }}</textarea>
+<br>
+
+<h2 class="detail-title">{% trans "Additional notes" %}</h2>
+<textarea class="form-control" placeholder="{% trans 'Additional notes' %}" name="additional_notes" required rows="10">{{ internship_form.additional_notes.value|default_if_none:'' }}</textarea>
+<br>
+<div class="container my-files">
+    <div class="row">
+        <h2 class="detail-title">{% trans "Agreement" %}</h2>
+        <div class="custom-file-upload">
+            <input type="file" name="agreement" data-value="{% if internship_form.agreement.value %}{{ internship_form.agreement.value.url }}{% endif %}" data-label="{% trans 'DOWNLOAD' %}" data-selected="{% trans 'NOT ATTACHED' %}">
+        </div>
+    </div>
+    <div class="row">
+        {% for error in internship_form.agreement.errors %}
+            <p class="text-danger">{{ error }}</p>
+        {% endfor %}
+    </div>
+</div>
+<br>

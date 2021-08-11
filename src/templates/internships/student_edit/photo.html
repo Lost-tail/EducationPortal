@@ -1,0 +1,14 @@
+{% extends 'internships/student_edit/base.html' %}
+
+{% load static %}
+{% load i18n %}
+
+
+{% block student_edit_action %}{% url 'student_edit_photo' %}{% endblock %}
+
+{% block student_edit_content %}
+<h2 class="detail-title">{% trans "Your photo" %}</h2>
+
+<img src="{% if request.user.student.photo %}{{ request.user.student.photo.url }}{% else %}{% static 'img/useravatar.png' %}{% endif %}" alt="User Pic" class="img-responsive img-circle" style="height:auto; width:auto; max-height:200px; max-width:200px;" border="0">
+<input type="file" name="photo" id="userpicupload">
+{% endblock %}

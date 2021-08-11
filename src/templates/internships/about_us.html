@@ -1,0 +1,38 @@
+{% extends 'internships/base.html' %}
+
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<!-- Title Header Start -->
+<section class="inner-header-title" style="background-image:url({% static 'img/aboutusbackground.png' %});">
+    <div class="container">
+        <h1>{% trans "About Us" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+<!-- Title Header End -->
+
+<!-- Blog Detail -->
+<section class="section">
+    <div class="container">
+        <div class="row no-mrg">
+            <div class="col-md-8">
+                <article class="blog-news">
+                    <div class="full blog-content">
+                        <h2 class="blog-sing-title">{% trans "About Us" %}</h2>
+                        <div class="blog-text">
+                            <p>{% trans "HEIs Employers is an innovative multi-functional platform providing professional internships and employment opportunities for graduates of higher education institutions in the areas of agriculture, urban environment, landscape design and design, green infrastructure and technologies in national and international markets." %}</p>
+
+                            <p>{% trans "We develop advanced technologies to help students operatively find the best internship in Private Companies, Public Organization and NGOs, involved in the sphere of urban-rural interactions and sustainable development." %}</p>
+
+                            <p>{% trans 'The web-platform was created in the framework of the project "Training capacities in Agriculture and Urban-Rural interactions for Sustainable development of megacities" (TAURUS), supported by the European Agency for Education and Culture (EACEA). The project involves 8 universities: University of Tuscia (Italy), University of Wageningen (the Netherlands), University of Georg August (Germany), Forestry University of Nanjing and University of Agriculture and Forestry of Fujian (China), Russian State Agricultural University. K.A. Timiryazeva, Voronezh State University and Peoples’ Friendship University of Russia (Russia). The total duration of the project is from 2017 to 2020. One of the key tasks of the project is the development of professional internships for students in specialized organizations of partner countries.' %}</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Blog Detail End -->
+{% endblock %}

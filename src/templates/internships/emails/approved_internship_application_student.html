@@ -1,0 +1,16 @@
+{% extends 'internships/emails/base.html' %}
+
+
+{% load i18n %}
+
+{% block content %}
+    <h3>{% trans 'Internship' %} "{{ internship_application.internship.name }}"</h3>
+    <p>{% trans 'Your internship application has been approved' %}.</p>
+    {% if internship_application.internship.agreement %}
+        <br>
+        <p>{% trans 'You need to send a copy of the agreement' %}.</p>
+        <a href="https://work4practice.com{% url 'student_personal_account' %}" style="color: #11b719d6;
+    text-decoration: underline;
+    text-underline-position: under;">{% trans "My Applications" %}</a>
+    {% endif %}
+{% endblock %}

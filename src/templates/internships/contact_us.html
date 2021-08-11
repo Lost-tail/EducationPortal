@@ -1,0 +1,79 @@
+{% extends 'internships/base.html' %}
+
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<!-- Title Header Start -->
+<section class="inner-header-title" style="background-image: url({% static 'img/contactusheader.png' %});">
+    <div class="container">
+        <h1>{% trans "Contact Page" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+<!-- Title Header End -->
+
+<!-- Contact Page Section Start -->
+<section class="contact-page">
+    <div class="container">
+        <h2>{% trans "Drop A Mail" %}</h2>
+
+        <div class="col-md-4 col-sm-4">
+            <div class="contact-box">
+                <i class="fa fa-map-marker"></i>
+                <p>{% trans "Miklukho-Maklaya Str.6, 117198, Moscow, Russia" %}</p>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-4">
+            <div class="contact-box">
+                <i class="fa fa-envelope"></i>
+                <p>contact@heisemployers.net</p>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-4">
+            <div class="contact-box">
+                <i class="fa fa-phone"></i>
+                <p>+7 (499) 936-87-87</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- contact section End -->
+
+<!-- contact form -->
+<section class="contact-form">
+    <div class="container">
+        <form action="#" method="post">
+            <h2>{% trans "Drop A Mail" %}</h2>
+
+            <div class="col-md-6 col-sm-6">
+                <input type="text" class="form-control" placeholder="{% trans 'Your Name' %}" name="contactformname">
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+                <input type="email" class="form-control" placeholder="{% trans 'Your Email' %}" name="contactformemail">
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+                <input type="text" class="form-control" placeholder="{% trans 'Phone Number' %}" name="contactformphone">
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+                <input type="text" class="form-control" placeholder="{% trans 'Subject' %}" name="contactformsubj">
+            </div>
+
+            <div class="col-md-12 col-sm-12">
+                <textarea class="form-control" placeholder="{% trans 'Message' %}" name="contactformmessage"></textarea>
+            </div>
+
+            <div class="col-md-12 col-sm-12">
+                <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+            </div>
+            <input type="hidden" name="superaction" value="contactussend">
+        </form>
+    </div>
+</section>
+<!-- Contact form End -->
+{% endblock %}

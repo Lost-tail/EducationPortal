@@ -1,0 +1,128 @@
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="exampleInputField1">Published</label>
+        <input type="checkbox" class="form-control" id="exampleInputField1" name="activated" {% if internship_form.activated.value %}checked{% endif %}>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputField1">Internship Name</label>
+        <input type="text" class="form-control" id="exampleInputField1" name="name" value="{{ internship_form.name.value|default_if_none:'' }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="startdate">Call Deadline Date</label>
+        <input type="text" name="applications_deadline" class="form-control date-picker" data-date-format="dd/mm/yyyy" value="{{ internship_form.applications_deadline.value|default_if_none:'' }}" required autocomplete="off">
+    </div>
+
+    <div class="form-group">
+        <label for="startdate">Initial date</label>
+        <input type="text" name="start_date" class="form-control date-picker" data-date-format="dd/mm/yyyy" value="{{ internship_form.start_date.value|default_if_none:'' }}" required autocomplete="off">
+    </div>
+
+    <div class="form-group">
+        <label for="startdate">End date</label>
+        <input type="text" name="end_date" class="form-control date-picker" data-date-format="dd/mm/yyyy" value="{{ internship_form.end_date.value|default_if_none:'' }}" required autocomplete="off">
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputField1">Country</label>
+        <select name="country" class="form-control" required>
+            {% for country in countries %}
+                <option value="{{ country.id }}" {% if country == internship_form.country.initial %}selected{% endif %}>{{ country.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputField1">Company</label>
+        <select name="company" class="form-control" required>
+            {% for company in сompanies %}
+                <option value="{{ company.id }}" {% if company == internship_form.company.initial %}selected{% endif %}>{{ company.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputField1">University</label>
+        <select name="university" class="form-control" required>
+            {% for university in universities %}
+                <option value="{{ university.id }}" {% if university == internship_form.university.initial %}selected{% endif %}>{{ university.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputField1">Number of positions (max)</label>
+        <input type="number" class="form-control" name="seats_number" value="{{ internship_form.seats_number.value|default_if_none:'' }}" required>
+    </div>
+
+    <div id="SelectCompany" class="form-group">
+        <label for="exampleInputField1">Status</label>
+        <select name="status" class="form-control" required>
+            {% for status_id, status_name in internship_form.status.field.choices %}
+                <option value="{{ status_id }}" {% if status_id == internship_form.status.value %}selected{% endif %}>{{ status_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="internshipdescr">Required knowledges and skills</label>                
+        <textarea id="internshipdescr" class="form-control" name="required_knowledge" rows="5" cols="200" required>{{ internship_form.required_knowledge.value|default_if_none:'' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputField1">Objectives</label>
+        <textarea id="internshipdescr" class="form-control" name="objectives" rows="5" cols="200" required>{{ internship_form.objectives.value|default_if_none:'' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="shortcoursemodules">Short course modules</label>                
+        <textarea id="shortcoursemodules" class="form-control" name="short_course_modules" rows="5" cols="100" required>{{ internship_form.short_course_modules.value|default_if_none:'' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="internshipdescr">Internship activities</label>                
+        <textarea id="internshipactivities" class="form-control" name="description" rows="5" cols="100" required>{{ internship_form.description.value|default_if_none:'' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="internshipdescr">Additional notes</label>                
+        <textarea id="additionalnotes" class="form-control" name="additional_notes" rows="5" cols="100" required>{{ internship_form.additional_notes.value|default_if_none:'' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="academiccoordinator">Academic Coordinator Name</label>
+        <input type="text" class="form-control" id="academiccoordinator" name="academic_coordinator_name" value="{{ internship_form.academic_coordinator.initial.name }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="academiccoordinatoremail">Academic Coordinator Email</label>
+        <input type="email" class="form-control" id="academiccoordinatoremail" name="academic_coordinator_email" value="{{ internship_form.academic_coordinator.initial.email }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="academictutorname1">Academic Tutor Name</label>
+        <input type="text" class="form-control" id="academictutorname1" name="academic_tutor_name" value="{{ internship_form.academic_tutor.initial.name }}" required>
+    </div>
+    <div class="form-group">
+        <label for="academictutoremail1">Academic Tutor Emai</label>
+        <input type="email" class="form-control" id="academictutoremail1" name="academic_tutor_email" value="{{ internship_form.academic_tutor.initial.email }}" required>
+    </div>         
+
+    <div class="form-group">
+        <label for="hostinginstitutiontutor1">Hosting Institution Tutor Name</label>
+        <input type="text" class="form-control" id="hostinginstitutiontutor1" name="hosting_institution_tutor_name" value="{{ internship_form.hosting_institution_tutor.initial.name }}" required>
+    </div>
+    <div class="form-group">
+        <label for="hostinginstitutionemail1">Hosting Institution Tutor Email</label>
+        <input type="email" class="form-control" id="hostinginstitutionemail1" name="hosting_institution_tutor_email" value="{{ internship_form.hosting_institution_tutor.initial.email }}" required>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputField1">Agreement</label>
+        <div>
+            {{ internship_form.agreement }}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success horizontal-form-button">Save</button>
+</form>

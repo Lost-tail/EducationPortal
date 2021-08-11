@@ -1,0 +1,148 @@
+{% extends 'internships/base.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load line_break %}
+
+
+{% block title %}HEIs Employers / Company Details{% endblock %}
+
+{% block content %}
+<!-- Title Header Start -->
+<section class="inner-header-title">
+    <div class="container">
+        <h1>{% trans "Company" %}</h1>
+    </div>
+</section>
+<div class="clearfix"></div>
+<!-- Title Header End -->
+
+<!-- Company Detail Start -->
+<section class="detail-desc">
+    <div class="container">
+        <div class="ur-detail-wrap top-lay">
+            <div class="ur-detail-box">
+                <div class="ur-caption">
+                    <h4 class="ur-title">{{ company.name }}</h4>
+                </div>
+            </div>
+            <div class="ur-detail-btn">
+                {% if user.company == company or user.staff_user.staff_type == 'Company Representative' and user.staff_user.company == company %}
+                    <a type="button" href="{% url 'company_edit' %}" class="btn btn-success">{% trans "Edit Company Profile" %}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Company Detail End -->
+
+<!-- company full detail Start -->
+<section class="full-detail-description full-detail">
+    <div class="container">
+        <div class="row">
+            
+            <div class="col-lg-8 col-md-8">
+                
+                <div class="row-bottom">
+                    <h2 class="detail-title">{% trans "About Company" %}</h2>
+                    {% autoescape off %}
+                        <p>{% line_break company.description %}</p>
+                    {% endautoescape %}
+                </div>
+
+                <div class="row-bottom">
+                    <h2 class="detail-title">{% trans "Professional Sphere" %}</h2>
+                    {% autoescape off %}
+                        <p>{% line_break company.professional_sphere %}</p>
+                    {% endautoescape %}
+                </div>
+
+                <div class="row-bottom">
+                    <h2 class="detail-title">{% trans "Internships" %}</h2>
+                    {% for internship in company.internships.all|slice:":8" %}
+                        {% cycle 'start' 'end' as position_row silent %}
+                        {% if position_row == 'start' %}
+                            <div class="row extra-mrg" style="margin-bottom: 35px;">
+                        {% endif %}
+                        <div class="col-md-6">
+                            {% include 'internships/internship_card.html' %}
+                        </div>
+                        {% if position_row == 'end' or forloop.last %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    {% if company.internships.count > 8 %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="text-center">
+                                    <a href="{% url 'list_internships' %}?company_id={{ company.id }}" class="btn btn-primary">{% trans "Load More" %}</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}    
+                </div>
+                <div class="row-bottom">
+                    <h2 class="detail-title">{% trans "Reviews" %}</h2>
+                    <div class="public-reviews">
+                        {% for review in activated_reviews %}
+                            {% include 'internships/internships/public_review_card.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-4">
+                <div class="full-sidebar-wrap">
+                                                    
+                    <!-- Company overview -->
+                    <div class="sidebar-widgets">
+                    
+                        <div class="ur-detail-wrap">
+
+                            <div class="ur-detail-wrap-header">
+                                <h4>{% trans "Company Overview" %}</h4>
+                            </div>
+
+                            <div class="ur-detail-wrap-body">
+                                {% if company.logo %}
+                                    <img src="{{ company.logo.url }}" style='height:auto; width:auto; max-width:100%;' border='0'><br><br>
+                                {% endif %}
+                                {% if company.address %}
+                                    <b>{% trans "Address" %}</b><br>{{ company.address }}<br><br>
+                                {% endif %}
+                                {% if company.website %}
+                                    <b>{% trans "Website" %}</b><br><a href="{{ company.website }}">{{ company.website }}</a><br><br>
+                                {% endif %}
+                                {% if company.year_estabilished %}
+                                    <b>{% trans "Estabilished" %}</b><br>{{ company.year_estabilished }}<br><br>
+                                {% endif %}
+                                {% if company.number_of_employees %}
+                                    <b>{% trans "Number of Employees" %}</b><br>{{ company.number_of_employees }}<br><br>
+                                {% endif %}
+                                {% if company.email %}
+                                    <b>{% trans "Contact Email" %}</b><br>
+                                    <a href="mailto:{{ company.email }}">{{ company.email }}</a><br><br>
+                                {% endif %}
+                                {% if company.phone %}
+                                    <b>{% trans "Phone" %}</b><br>{{ company.phone }}<br><br>
+                                {% endif %}
+                                {% if company.contact_person  %}
+                                    <b>{% trans "Hosting Institution Tutor" %}</b><br>{{ company.contact_person.name }}<br>
+                                    (<a href='mailto:{{ company.contact_person.email }}'>
+                                    {{ company.contact_person.email }}</a>)
+                                    <br><br>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <!-- /Company overview -->
+                                                
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- company full detail End -->
+{% endblock %}

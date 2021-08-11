@@ -1,0 +1,22 @@
+{% extends 'internships/student_edit/base.html' %}
+
+{% load i18n %}
+
+
+{% block student_edit_action %}{% url 'student_edit_languages' %}{% endblock %}
+
+{% block student_edit_content %}
+<h2 class="detail-title">Languages</h2>
+{% for student_language in request.user.student.languages.all %}
+    <select class="form-control" id="j-category" name="language" required>
+    {% for language in all_languages %}
+        <option value="{{ language.id }}" {% if student_language == student_language %}selected{% endif %}>{{ language.name }}</option>
+    {% endfor %}
+    </select>
+{% endfor %}         
+<select class="form-control" id="j-category" name="language" required>
+{% for language in all_languages %}
+    <option value="{{ language.id }}">{{ language.name }}</option>
+{% endfor %}
+</select>
+{% endblock %}

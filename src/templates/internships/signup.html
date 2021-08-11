@@ -1,0 +1,114 @@
+{% extends 'internships/base.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load show_all_attrs %}
+
+
+{% block title %}HEIs Employers / Sign Up{% endblock %}
+
+{% block content %}
+<section class="signup-screen-sec simple-bg-screen" style="background-image:url({% static 'img/authbackgroud.png' %});">
+    <div class="container">
+        <div class="signup-screen">
+            <a href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" class="img-responsive" alt=""></a>
+            <form method="post">
+                {% csrf_token %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="form-group text-center message">
+                            <h4 class="text-{{ message.tags }}">{{ message }}</h4>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <div class="form-group signup-types">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-success" onclick="ChangeSignUpType('student')" id="signup_type_student">{% trans 'Student' %}</button>
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-default" onclick="ChangeSignUpType('university')" id="signup_type_university">{% trans 'University' %}</button>
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-default" onclick="ChangeSignUpType('company')" id="signup_type_company">{% trans 'Company' %}</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="{% trans 'Full Name or Organization Name' %}" name="full_name" required id="signup_name" value="{% if signup_type == 'student' %}{{ form.full_name.value }}{% else %}{{ form.name.value }}{% endif %}">
+                    {% if signup_type == 'student' %}
+                        {% for error in form.full_name.errors %}
+                            <p class="text-danger">{{ error }}</p>
+                        {% endfor %}
+                    {% else %}
+                        {% for error in form.name.errors %}
+                            <p class="text-danger">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="{% trans 'Email' %}" name="email" required value="{{ form.email.value }}">
+                    {% for error in form.email.errors %}
+                        <p class="text-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="{% trans 'Password' %}" name="password" required>
+                    {% for error in form.password.errors %}
+                        <p class="text-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="{% trans 'Student card number' %}" name="card_number" required id="card_number" value="{{ form.card_number.value }}">
+                    {% for error in form.card_number.errors %}
+                        <p class="text-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    <select class="form-control" aria-label="Default select example" id="university" name="university" required>
+                        <option selected>{% trans 'Select university' %}</option>
+                        {% for univ in universities %}
+                        <option value="{{ univ.id }}">{{ univ.name }}</option>
+                        {% endfor %}
+                      </select>
+                    {% for error in form.university.errors %}
+                        <p class="text-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-login" type="submit">{% trans 'Sign Up' %}</button>
+                </div>
+                <input hidden type="text" id="signup_type" value="student" name="signup_type">
+                <span>{% trans 'Have You Account?' %}  <a href="{% url 'login' %}">{% trans 'Login' %}</a></span>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra-body %}
+<script type="text/javascript">
+    {% if signup_type %}
+        ChangeSignUpType('{{ signup_type }}')
+    {% endif %}
+    let student = document.getElementById("signup_type_student")
+    let university = document.getElementById("signup_type_university")
+    let company = document.getElementById("signup_type_company")
+    let content = document.getElementById("card_number")
+    let select_univ = document.getElementById("university")
+    student.addEventListener("click", () => {
+    content.style.display = "block";
+    select_univ.style.display = "block";
+    })
+    university.addEventListener("click", () => {
+    content.style.display = "none";
+    select_univ.style.display = "none"
+    })
+    company.addEventListener("click", () => {
+    content.style.display = "none";
+    select_univ.style.display = "none"
+    })
+</script>
+{% endblock %}
+
+{% block footer %}{% include 'internships/footer_light.html' %}{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'internships/base.html' %}
+
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}HEIs Employers / Create Internship{% endblock %}
+
+{% block content %}
+<section class="inner-header-page">
+    <div class="container">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-8">
+            <div class="left-side-container">                        
+                <div class="header-details">
+                    <h4>{% trans "Create New Internship" %}</h4>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="clearfix"></div>
+<!-- Title Header End -->
+
+<!-- Freelancer Detail Start -->
+<section class="student-edit">
+    <div class="container">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-8">
+            <div class="container-detail-box">
+                <form id="internship_create_form" action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% include 'internships/internships/form_fields.html' %}
+                    <button type="submit" class="update-btn">{% trans "Create New" %}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,10 @@
+export HEISEMPOYERS_DB_NAME='heisemployers'
+export HEISEMPOYERS_DB_USER='suadminuser'
+export HEISEMPOYERS_DB_PASSWORD='34jfp4!ktgm$fcV'
+export HEISEMPOYERS_DB_HOST='localhost'
+export HEISEMPOYERS_DB_PORT='5432'
+
+export HEISEMPOYERS_EMAIL_HOST='smtp.yandex.com'
+export HEISEMPOYERS_EMAIL_PORT='587'
+export HEISEMPOYERS_EMAIL_HOST_USER='noreply@work4practice.com'
+export HEISEMPOYERS_EMAIL_HOST_PASSWORD='hWfZxisynhYubGG4Su'
